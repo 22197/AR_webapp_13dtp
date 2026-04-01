@@ -20,11 +20,18 @@ app = Flask(__name__)
 
 
 # initialise DB
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///database.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
+
+
+# create database model
+class Report(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String)
+    report: Mapped[str] = mapped_column(String)
 
 
 # create Form class
