@@ -8,11 +8,11 @@ import sqlite3
 import flask_login
 # SQL alchemy
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship 
-from sqlalchemy import String, Integer, ForeignKey, select 
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import String, Integer, ForeignKey, select
 # FlaskForms
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
 
 
@@ -27,24 +27,25 @@ db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 
-# create database model
-class Report(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String)
-    report: Mapped[str] = mapped_column(String)
-
-
 # create Form class
 class NameForm(FlaskForm):
-    title = StringField("Please write a title for this incident...", 
-                            validators=[DataRequired()])
-    report = StringField("Please report any incidents here...", 
-                            validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    title = StringField(
+        "Please write a title for this incident...",
+        validators=[
+            DataRequired()
+            ])
+    report = TextAreaField(
+        "Please report any incidents here...",
+        validators=[
+            DataRequired()
+            ])
+    submit = SubmitField(
+        "Submit"
+        )
 
 
 # routes
-@app.route('/report', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def report():
     title = None
     report = None
@@ -57,6 +58,11 @@ def report():
         form.report.data = ''
     return render_template("report.html", title=title, report=report,
                            form=form)
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
 
 
 if __name__ == "__main__":
