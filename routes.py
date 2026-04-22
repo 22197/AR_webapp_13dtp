@@ -59,10 +59,16 @@ def report():
     return render_template("report.html", title=title, report=report,
                            form=form)
 
+
+# ______________________________________________________________________
+
+
 @app.route('/about')
 def about():
     return render_template("about.html")
 
+
+# _______________________________________________________________________
 
 
 if __name__ == "__main__":
