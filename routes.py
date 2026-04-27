@@ -30,7 +30,7 @@ app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 # Create db model
 # reports tabel
-class Reports(db):
+class Reports(db.Model):
     __tablename__ = "Reports"
     report_id: Mapped[int] = mapped_column(primary_key=True)
     report_title = db.Column(db.String(20), nullable=False)
