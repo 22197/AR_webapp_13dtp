@@ -22,13 +22,23 @@ app = Flask(__name__)
 # initialise DB
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db = SQLAlchemy(app)
 
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 
+# Create db model
+# reports tabel
+class Reports(db):
+    __tablename__ = "Reports"
+    report_id: Mapped[int] = mapped_column(primary_key=True)
+    report_title = db.Column(db.String(20), nullable=False)
+    report_detail = db.Column(db.String(1000), nullable=False)
+
+
 # create Form class
-class NameForm(FlaskForm):
+class ReportForm(FlaskForm):
     title = StringField(
         "Please write a title for this incident...",
         validators=[
@@ -44,18 +54,23 @@ class NameForm(FlaskForm):
         )
 
 
-# routes
+# route report.html
 @app.route('/', methods=['GET', 'POST'])
 def report():
     title = None
     report = None
-    form = NameForm()
+    form = ReportForm()
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, asign name
         form.title.data = ''  # reset for the next times
         report = form.report.data
         form.report.data = ''
+
+        new_report = Reports(report_title=title, report_detail=report)
+        db.session.add(new_report)
+        db.session.commit()
+
     return render_template("report.html", title=title, report=report,
                            form=form)
 

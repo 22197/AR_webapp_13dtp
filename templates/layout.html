@@ -3,9 +3,12 @@
 <head>
     <title>Document</title>
 </head>
-<header>{% include "header.html" %}</header>
 <body>
-    {% block content %}
-    {% endblock %}
+    <header>{% include "header.html" %}</header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>{% include "footer.html" %}</footer>
 </body>
 </html>
