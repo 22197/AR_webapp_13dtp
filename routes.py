@@ -14,6 +14,8 @@ from sqlalchemy import String, Integer, ForeignKey, select
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
+# Datetime
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -29,15 +31,25 @@ app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 
 # Create db model
-# reports tabel
+# reports table
 class Reports(db.Model):
     __tablename__ = "Reports"
-    report_id: Mapped[int] = mapped_column(primary_key=True)
+    report_id = db.Column(db.Integer, primary_key=True)
     report_title = db.Column(db.String(20), nullable=False)
     report_detail = db.Column(db.String(1000), nullable=False)
+    report_time = db.Column(db.String, nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('Status.status_id'))
+
+# status table
+class Status(db.Model):
+    __tablename__ = "Status"
+    status_id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String, nullable=False)
+
 
 
 # create Form class
+# Report
 class ReportForm(FlaskForm):
     title = StringField(
         "Please write a title for this incident...",
@@ -52,7 +64,7 @@ class ReportForm(FlaskForm):
     submit = SubmitField(
         "Submit"
         )
-
+# Notes
 
 # route report.html
 @app.route('/', methods=['GET', 'POST'])
@@ -66,13 +78,19 @@ def report():
         form.title.data = ''  # reset for the next times
         report = form.report.data
         form.report.data = ''
+        report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        status = '3'
 
-        new_report = Reports(report_title=title, report_detail=report)
+        new_report = Reports(report_title=title,
+                             report_detail=report,
+                             report_time=report_time,
+                             status_id=status)
         db.session.add(new_report)
         db.session.commit()
 
-    return render_template("report.html", title=title, report=report,
-                           form=form)
+    return render_template("report.html", title=title,
+                           form=form,
+                           report=report)
 
 
 # ______________________________________________________________________

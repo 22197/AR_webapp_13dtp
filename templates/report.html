@@ -9,10 +9,10 @@
     <form method = "POST">
         {{ form.hidden_tag() }} 
         {{ form.title.label (class_ = "form-label") }}
-        {{ form.title(class_ = "form-control", placeholder = "Title of report") }}
+        {{ form.title(class_ = "form-control", placeholder = "title of report") }}
         <br>
         {{ form.report.label (class_ = "form-label") }}
-        {{ form.report(class_ = "form-control", placeholder = "Please write details for the report") }}
+        {{ form.report(class_ = "form-control", placeholder = "please write details for the report") }}
         <br/>
         {{ form.submit(class_ = "btn btn-primary") }}
     </form>
