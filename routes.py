@@ -47,20 +47,24 @@ class Status(db.Model):
     status = db.Column(db.String, nullable=False)
 
 
-
 # create Form class
 # Report
 class ReportForm(FlaskForm):
+    # Title
     title = StringField(
         "Please write a title for this incident...",
         validators=[
             DataRequired()
             ])
+    # Report
     report = TextAreaField(
         "Please report any incidents here...",
         validators=[
             DataRequired()
             ])
+    # Checkboxes
+        
+    # Submit
     submit = SubmitField(
         "Submit"
         )
