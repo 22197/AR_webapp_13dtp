@@ -12,9 +12,13 @@
         {{ form.title(class_ = "form-control", placeholder = "title of report") }}
         <br>
         {{ form.report.label (class_ = "form-label") }}
-        {{ form.report(class_ = "form-control", placeholder = "please write details for the report") }}
+        {{ form.report(class_ = "form-control") }}
         <br/>
-        
+        <ul>
+            {% for subfield in form.type %}
+                <li>{{ subfield() }} {{ subfield.label }}</li>
+            {% endfor %}
+        </ul>
         <br/>
         {{ form.submit(class_ = "btn btn-primary") }}
     </form>
