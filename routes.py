@@ -30,6 +30,12 @@ db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 
+# bridging table Report_Type (define before Reports class)
+Report_Type = db.Table('Report_Type',
+    db.Column('report_id', db.Integer, db.ForeignKey('Reports.report_id'), primary_key=True),
+    db.Column('type_id', db.Integer, db.ForeignKey('Type.type_id'), primary_key=True)
+)
+
 # Create db model
 # reports table
 class Reports(db.Model):
@@ -39,7 +45,7 @@ class Reports(db.Model):
     report_detail = db.Column(db.String(1000), nullable=False)
     report_time = db.Column(db.String, nullable=False)
     # Remove status_id, add relationship to types
-    types = db.relationship('Type', secondary='report_types', backref='reports')
+    types = db.relationship('Type', secondary=Report_Type, backref='reports')
 
 # status table (keep if needed elsewhere)
 class Status(db.Model):
@@ -52,12 +58,6 @@ class Type(db.Model):
     __tablename__ = "Type"
     type_id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String, nullable=False)
-
-# bridging table Report_Type
-report_types = db.Table('report_types',
-    db.Column('report_id', db.Integer, db.ForeignKey('Reports.report_id'), primary_key=True),
-    db.Column('type_id', db.Integer, db.ForeignKey('Type.type_id'), primary_key=True)
-)
 
 
 # create Form class
@@ -110,14 +110,12 @@ def report():
 
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-        status_id = "3"
-
         new_report = Reports(report_title=title,
                              report_detail=report,
-                             report_time=report_time,
-                             status_id=status_id
+                             report_time=report_time
                             )
         
+        #help from COPILOT
         types = form.type.data
         # Loop through each selected type ID string
         for type_id_str in types:
@@ -127,6 +125,8 @@ def report():
             if type_obj:
                 # Add the Type object to the report's many-to-many relationship
                 new_report.types.append(type_obj)
+        
+        form.type.data = ''
 
         db.session.add(new_report)
         db.session.commit()
