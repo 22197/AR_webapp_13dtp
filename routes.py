@@ -29,14 +29,14 @@ db = SQLAlchemy(app)
 
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
-
+# ______________________________________________________________________
+# Create db model
 # bridging table Report_Type (define before Reports class)
 Report_Type = db.Table('Report_Type',
     db.Column('report_id', db.Integer, db.ForeignKey('Reports.report_id'), primary_key=True),
     db.Column('type_id', db.Integer, db.ForeignKey('Type.type_id'), primary_key=True)
 )
 
-# Create db model
 # reports table
 class Reports(db.Model):
     __tablename__ = "Reports"
@@ -87,7 +87,9 @@ class ReportForm(FlaskForm):
     submit = SubmitField(
         "Submit"
         )
-# Notes
+
+# ______________________________________________________________________
+# routes
 
 # route report.html
 @app.route('/', methods=['GET', 'POST'])
@@ -136,7 +138,18 @@ def report():
                            )
 
 
-# ______________________________________________________________________
+@app.route('/view')
+def view():
+    reports = Reports.query.all()
+    status = Status.query.all()
+    type = Type.query.all()
+
+    return render_template("all_report.html",
+                            reports=reports,
+                            status=status,
+                            type=type
+                           )
+
 
 
 @app.route('/about')
