@@ -27,6 +27,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+# Create the database tables
+with app.app_context():
+    db.create_all()
+
 app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 
 # ______________________________________________________________________
@@ -144,7 +148,7 @@ def view():
     status = Status.query.all()
     type = Type.query.all()
 
-    return render_template("all_report.html",
+    return render_template("view.html",
                             reports=reports,
                             status=status,
                             type=type
