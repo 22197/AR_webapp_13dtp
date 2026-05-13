@@ -1,9 +1,43 @@
 /* Text */
 h1{
+    color: #355872;
 }
 
-/* header.html */
-header{
-    background-color: #355872;
+a{
+    color: #355872
+}
 
+/* Header */
+header{
+    background-color: #7AAACE;
+    position: sticky;
+    text-align: left;
+    padding: 2%;
+}
+
+.h_link{
+    background-color: #F7F8F0;
+    padding: 10px 20px;
+    border-radius:5px;
+    border-color: #355872;
+    text-decoration:none;
+    color: #355872;
+}
+
+.h_link:hover{
+    background-color: #9CD5FF;
+}
+
+
+/*  */
+body{
+    background-color: #F7F8F0;
+}
+
+/* report.html */
+.centre{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
 }

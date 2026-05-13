@@ -160,6 +160,9 @@ def view():
 def about():
     return render_template("about.html")
 
+@app.route('/404')
+def _404():
+    return render_template("404.html")
 
 # _______________________________________________________________________
 
