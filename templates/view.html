@@ -1,9 +1,27 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <h1>Reports</h1>
 {% for report in reports %}
     <a href="">{{ report.report_title }}</a>
+    <p>
+    Status:
+    {% if report.status %}
+        {{ report.status.status }}
+    {% else %}
+        No status
+    {% endif %}
     <br>
+    {% if report.types %}
+        {% for t in report.types %}
+            {{ t.type }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    {% else %}
+        No type
+    {% endif %}
+    </p>
 {% endfor %}
 
 {% endblock %}
+
+#fix

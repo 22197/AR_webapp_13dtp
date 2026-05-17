@@ -36,10 +36,20 @@ app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
 # ______________________________________________________________________
 # Create db model
 # bridging table Report_Type (define before Reports class)
-Report_Type = db.Table('Report_Type',
-    db.Column('report_id', db.Integer, db.ForeignKey('Reports.report_id'), primary_key=True),
-    db.Column('type_id', db.Integer, db.ForeignKey('Type.type_id'), primary_key=True)
+Report_Type = db.Table(
+    'Report_Type',
+    db.Column(
+        'report_id',
+        db.Integer,
+        db.ForeignKey('Reports.report_id'),
+        primary_key=True),
+    db.Column(
+        'type_id',
+        db.Integer,
+        db.ForeignKey('Type.type_id'),
+        primary_key=True)
 )
+
 
 # reports table
 class Reports(db.Model):
@@ -48,14 +58,21 @@ class Reports(db.Model):
     report_title = db.Column(db.String(20), nullable=False)
     report_detail = db.Column(db.String(1000), nullable=False)
     report_time = db.Column(db.String, nullable=False)
-    # Remove status_id, add relationship to types
+    # status relationship
+    status_id = db.Column(db.Integer, db.ForeignKey('Status.status_id'),
+                          nullable=True
+                          )
+    status = db.relationship('Status', backref='reports')
+    # types relationship
     types = db.relationship('Type', secondary=Report_Type, backref='reports')
+
 
 # status table (keep if needed elsewhere)
 class Status(db.Model):
     __tablename__ = "Status"
     status_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String, nullable=False)
+
 
 # type table
 class Type(db.Model):
@@ -70,6 +87,7 @@ class MultiCheckboxField(SelectMultipleField):
     # render the field as a list of checkboxes
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
+
 
 # Report Form
 class ReportForm(FlaskForm):
@@ -95,13 +113,14 @@ class ReportForm(FlaskForm):
 # ______________________________________________________________________
 # routes
 
+
 # route report.html
 @app.route('/', methods=['GET', 'POST'])
 def report():
     title = None
     report = None
     form = ReportForm()
-    #Check boxes
+    # Check boxes
     form.type.choices = [
         (str(rt.type_id), rt.type)
         for rt in Type.query.all()
@@ -116,22 +135,23 @@ def report():
 
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-        new_report = Reports(report_title=title,
-                             report_detail=report,
-                             report_time=report_time
-                            )
+        new_report = Reports(
+            report_title=title,
+            report_detail=report,
+            report_time=report_time
+            )
         
-        #help from COPILOT
+        # help from COPILOT
         types = form.type.data
         # Loop through each selected type ID string
         for type_id_str in types:
-            # Convert string ID to integer and fetch the Type object from database
+            # Convert string ID to int and fetch Type object from db
             type_obj = Type.query.get(int(type_id_str))
             # Check if the Type object was found
             if type_obj:
                 # Add the Type object to the report's many-to-many relationship
                 new_report.types.append(type_obj)
-        
+
         form.type.data = ''
 
         db.session.add(new_report)
@@ -146,23 +166,35 @@ def report():
 def view():
     reports = Reports.query.all()
     status = Status.query.all()
+    types = Type.query.all()
+    return render_template(
+        "view.html",
+        reports=reports,
+        status=status,
+        types=types,
+    )
+
+
+'''@app.route('report/<int:id>')
+def reports():
+    reports = Reports.query.all()
+    status = Status.query.all()
     type = Type.query.all()
-
-    return render_template("view.html",
-                            reports=reports,
-                            status=status,
-                            type=type
-                           )
-
+    return render_template(".html",
+                        reports=reports,
+                        status=status,
+                        type=type
+                        )'''
 
 
 @app.route('/about')
 def about():
     return render_template("about.html")
 
-@app.route('/404')
+
+'''@app.route('/404')
 def _404():
-    return render_template("404.html")
+    return render_template("404.html")'''
 
 # _______________________________________________________________________
 
