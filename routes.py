@@ -175,16 +175,17 @@ def view():
     )
 
 
-'''@app.route('report/<int:id>')
-def reports():
+@app.route('/report/<int:report_id>')
+def reports(report_id):
     reports = Reports.query.all()
     status = Status.query.all()
     type = Type.query.all()
-    return render_template(".html",
-                        reports=reports,
-                        status=status,
-                        type=type
-                        )'''
+    return render_template(
+        "edit.html",
+        reports=reports,
+        status=status,
+        type=type
+        )
 
 
 @app.route('/about')
