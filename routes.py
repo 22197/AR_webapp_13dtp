@@ -140,7 +140,7 @@ def report():
             report_detail=report,
             report_time=report_time
             )
-        
+
         # help from COPILOT
         types = form.type.data
         # Loop through each selected type ID string
@@ -177,11 +177,11 @@ def view():
 
 @app.route('/report/<int:report_id>')
 def reports(report_id):
-    reports = Reports.query.all()
+    reports = Reports.query.filter_by(report_id=report_id).scalar()
     status = Status.query.all()
     type = Type.query.all()
     return render_template(
-        "edit.html",
+        "edit_report.html",
         reports=reports,
         status=status,
         type=type
