@@ -13,10 +13,10 @@
         <form method = "POST">
             {{ form.hidden_tag() }} 
             {{ form.title.label (class_ = "form-label") }}
-            {{ form.title(class_ = "form-control", placeholder = "title of report") }}
+            {{ form.title(class_ = "form-control", placeholder = "title of report") }} # title
             <br>
             {{ form.report.label (class_ = "form-label") }}
-            {{ form.report(class_ = "form-control") }}
+            {{ form.report(class_ = "form-control") }} # Please report any incidents here...
             <br/>
             <ul>
                 {% for subfield in form.type %}

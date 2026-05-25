@@ -13,7 +13,7 @@ from sqlalchemy import String, Integer, ForeignKey, select
 # FlaskForms
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectMultipleField, widgets
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 # Datetime
 from datetime import datetime
 
@@ -55,8 +55,8 @@ Report_Type = db.Table(
 class Reports(db.Model):
     __tablename__ = "Reports"
     report_id = db.Column(db.Integer, primary_key=True)
-    report_title = db.Column(db.String(20), nullable=False)
-    report_detail = db.Column(db.String(1000), nullable=False)
+    report_title = db.Column(db.String, nullable=False)
+    report_detail = db.Column(db.String, nullable=False)
     report_time = db.Column(db.String, nullable=False)
     # status relationship
     status_id = db.Column(db.Integer, db.ForeignKey('Status.status_id'),
@@ -93,18 +93,28 @@ class MultiCheckboxField(SelectMultipleField):
 class ReportForm(FlaskForm):
     # Title
     title = StringField(
-        "Please write a title for this incident...",
+        "title",
         validators=[
-            DataRequired()
+            DataRequired(message="A title is required"),
+            Length(min=5,
+                   max=50,
+                   message="The title must be between 5 and 50 characters"),
             ])
     # Report
     report = TextAreaField(
-        "Please report any incidents here...",
+        "reportss",
         validators=[
-            DataRequired()
-            ])
+            DataRequired(message="An explanation is required"),
+            Length(min=20, message="A more detailed explanation is required")
+        ])
     # Check Boxes
-    type = MultiCheckboxField('type', choices=[])
+    type = MultiCheckboxField('type',
+                              choices=[],
+                              validators=[
+                                  DataRequired(
+                                      message="Please select a category"
+                                      ),
+                              ])
     # Submit
     submit = SubmitField(
         "Submit"
@@ -193,9 +203,9 @@ def about():
     return render_template("about.html")
 
 
-'''@app.route('/404')
+@app.route('/404')
 def _404():
-    return render_template("404.html")'''
+    return render_template("404.html")
 
 # _______________________________________________________________________
 
