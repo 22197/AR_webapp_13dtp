@@ -167,9 +167,13 @@ def report():
         db.session.add(new_report)
         db.session.commit()
 
-    return render_template("report.html", title=title,
-                           form=form
-                           )
+        return render_template("report.html",
+                               title=title,
+                               form=form
+                               )
+    else:
+        return render_template("report.html", form=form)
+    # write render error messages
 
 
 @app.route('/view')
