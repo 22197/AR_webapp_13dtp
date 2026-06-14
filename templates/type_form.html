@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ form.type_name.label(class_="form-label") }}
+    {{ form.type_name(class_="form-control") }}
+    {% for error in form.type_name.errors %}
+        <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+
+    <br>
+    {{ form.submit(class_="btn btn-primary") }}
+</form>
+<p><a href="{{ url_for('view') }}">Back to reports</a></p>
+{% endblock %}

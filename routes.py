@@ -12,7 +12,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer, ForeignKey, select
 # FlaskForms
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectMultipleField, widgets
+from wtforms import StringField, SubmitField, TextAreaField, SelectMultipleField, SelectField, widgets
 from wtforms.validators import DataRequired, Length
 # Datetime
 from datetime import datetime
@@ -81,6 +81,14 @@ class Type(db.Model):
     type = db.Column(db.String, nullable=False)
 
 
+# note table
+class Note(db.Model):
+    __tablename__ = "Note"
+    note_id = db.Column(db.Integer, primary_key=True)
+    note = db.Column(db.String, nullable=False)
+    # add report
+
+
 # create Form class
 # Check Boxes
 class MultiCheckboxField(SelectMultipleField):
@@ -102,7 +110,7 @@ class ReportForm(FlaskForm):
             ])
     # Report
     report = TextAreaField(
-        "reportss",
+        "reports",
         validators=[
             DataRequired(message="An explanation is required"),
             Length(min=20, message="A more detailed explanation is required")
@@ -118,6 +126,27 @@ class ReportForm(FlaskForm):
     # Submit
     submit = SubmitField(
         "Submit"
+        )
+
+
+# Edit form
+class EditForm(FlaskForm):
+    title = StringField(
+        "title"
+        )
+    status = SelectField(
+        "status"
+        )
+    type = SelectField(
+        "type"
+        )
+
+    note = TextAreaField(
+        "note",
+        validators=[]
+        )
+    update = SubmitField(
+        "Update"
         )
 
 # ______________________________________________________________________
@@ -145,13 +174,16 @@ def report():
 
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+        status_id = 3
+
         new_report = Reports(
             report_title=title,
             report_detail=report,
-            report_time=report_time
+            report_time=report_time,
+            status_id=status_id,
             )
 
-        # help from COPILOT
+        #####
         types = form.type.data
         # Loop through each selected type ID string
         for type_id_str in types:
@@ -185,12 +217,18 @@ def view():
         "view.html",
         reports=reports,
         status=status,
-        types=types,
+        types=types
     )
 
 
-@app.route('/report/<int:report_id>')
+@app.route('/report/<int:report_id>', methods=['GET', 'POST'])
 def reports(report_id):
+    form = EditForm()
+    report_to_update = Reports.query.get_or_404(report_id)
+    if form.validate_on_submit():
+        report_to_update.title = request.form['title']
+
+
     reports = Reports.query.filter_by(report_id=report_id).scalar()
     status = Status.query.all()
     type = Type.query.all()
@@ -198,7 +236,8 @@ def reports(report_id):
         "edit_report.html",
         reports=reports,
         status=status,
-        type=type
+        type=type,
+        form=form
         )
 
 
