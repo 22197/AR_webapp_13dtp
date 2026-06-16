@@ -1,7 +1,7 @@
 '''Anonymous Report School - routes & code, Riki Smillie, 19/03/2026'''
 # imports
 # Flask
-from flask import Flask, request, render_template
+from flask import Flask, flash, request, render_template
 # SQL
 import sqlite3
 # Flask Login
@@ -86,7 +86,10 @@ class Note(db.Model):
     __tablename__ = "Note"
     note_id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.String, nullable=False)
-    # add report
+    report_id = db.Column(db.Integer, db.ForeignKey('Reports.report_id'),
+                          nullable=False
+                          )
+    report = db.relationship('Reports', backref='notes')
 
 
 # create Form class
@@ -198,7 +201,6 @@ def report():
 
         db.session.add(new_report)
         db.session.commit()
-
         return render_template("report.html",
                                title=title,
                                form=form
@@ -221,15 +223,30 @@ def view():
     )
 
 
-@app.route('/report/<int:report_id>', methods=['GET', 'POST'])
-def reports(report_id):
+@app.route('/edit/<int:report_id>', methods=['GET', 'POST'])
+def edit(report_id):
     form = EditForm()
     report_to_update = Reports.query.get_or_404(report_id)
     if form.validate_on_submit():
         report_to_update.title = request.form['title']
+        try:
+            db.session.commit()
+            flash("Succecfully updated!")
+            return render_template("edit_report.html",
+                                   form=form,
+                                   report_to_update=report_to_update
+                                   )
+        except Exception:
+            flash("Something Went Wrong!... please try again")
+            return render_template("edit_report.html",
+                                   form=form,
+                                   report_to_update=report_to_update
+                                   )
+    else:
+        return render_template("edit_report.html", form=form)
 
 
-    reports = Reports.query.filter_by(report_id=report_id).scalar()
+    '''reports = Reports.query.filter_by(report_id=report_id).scalar()
     status = Status.query.all()
     type = Type.query.all()
     return render_template(
@@ -238,7 +255,7 @@ def reports(report_id):
         status=status,
         type=type,
         form=form
-        )
+        )'''
 
 
 @app.route('/about')
