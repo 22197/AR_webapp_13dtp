@@ -231,7 +231,7 @@ def edit(report_id):
         report_to_update.title = request.form['title']
         try:
             db.session.commit()
-            flash("Succecfully updated!")
+            flash("The Report Was Succecfully updated!")
             return render_template("edit_report.html",
                                    form=form,
                                    report_to_update=report_to_update

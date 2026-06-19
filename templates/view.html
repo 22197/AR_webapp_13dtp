@@ -3,7 +3,7 @@
 
 <h1>Reports</h1>
 {% for report in reports %}
-    <a href="http://127.0.0.1:5000/report/{{ report.report_id }}">{{ report.report_title }}</a>
+    <a href="http://127.0.0.1:5000/edit/{{ report.report_id }}">{{ report.report_title }}</a>
     <p>
     Status:
     {% if report.status %}
