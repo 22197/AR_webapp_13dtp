@@ -228,7 +228,7 @@ def edit(report_id):
     form = EditForm()
     report_to_update = Reports.query.get_or_404(report_id)
     if form.validate_on_submit():
-        report_to_update.title = request.form['title']
+        report_to_update.report_title = request.form['title']
         try:
             db.session.commit()
             flash("The Report Was Succecfully updated!")
@@ -243,7 +243,10 @@ def edit(report_id):
                                    report_to_update=report_to_update
                                    )
     else:
-        return render_template("edit_report.html", form=form)
+        return render_template("edit_report.html",
+                               form=form,
+                               report_to_update=report_to_update
+                               )
 
 
     '''reports = Reports.query.filter_by(report_id=report_id).scalar()
