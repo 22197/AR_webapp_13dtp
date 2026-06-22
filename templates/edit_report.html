@@ -1,12 +1,25 @@
 {%extends "layout.html"%}
 {%block content%}
-<h1></h1>
-<p>{{form.title}}</p>
 <form method="POST"> 
     {{ form.hidden_tag() }} 
-    {{ form.title.label (class_ = "form-label") }}
-    {{ form.title(class_ = "form-control", value = report_to_update.report_title) }} 
+    {{ form.title.label(class_="form-label") }}
+    {{ form.title(class_="form-control", value=report_to_update.report_title) }} 
+    <p>
+        {{report_to_update.report_detail}}
+    </p>
+    <ul>
+        {% for subfield in form.type %}
+            <li>{{ subfield() }} {{ subfield.label }}</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    {{ form.note.label(class_="form-label") }}
+    {{ form.note(class_="form-control") }} 
+    <br>
+    {{ form.update(class_="btn btn-primary") }}
+</form>
+<form method = "GET">
 
 </form>
-
 {% endblock%}

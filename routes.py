@@ -140,8 +140,9 @@ class EditForm(FlaskForm):
     status = SelectField(
         "status"
         )
-    type = SelectField(
-        "type"
+    type = MultiCheckboxField(
+        'type',
+        choices=[]
         )
 
     note = TextAreaField(
@@ -227,11 +228,26 @@ def view():
 def edit(report_id):
     form = EditForm()
     report_to_update = Reports.query.get_or_404(report_id)
+    form.type.choices = [
+        (str(rt.type_id), rt.type)
+        for rt in Type.query.all()
+    ]
+
+    if request.method == 'GET':
+        form.title.data = report_to_update.report_title
+        form.type.data = [str(t.type_id) for t in report_to_update.types]
+
     if form.validate_on_submit():
-        report_to_update.report_title = request.form['title']
+        report_to_update.report_title = form.title.data
+        selected_type_ids = [int(type_id) for type_id in form.type.data]
+        report_to_update.types = [
+            Type.query.get(type_id)
+            for type_id in selected_type_ids
+            if Type.query.get(type_id)
+        ]
         try:
             db.session.commit()
-            flash("The Report Was Succecfully updated!")
+            flash("The Report Was Successfully updated!")
             return render_template("edit_report.html",
                                    form=form,
                                    report_to_update=report_to_update
@@ -242,23 +258,10 @@ def edit(report_id):
                                    form=form,
                                    report_to_update=report_to_update
                                    )
-    else:
-        return render_template("edit_report.html",
-                               form=form,
-                               report_to_update=report_to_update
-                               )
-
-
-    '''reports = Reports.query.filter_by(report_id=report_id).scalar()
-    status = Status.query.all()
-    type = Type.query.all()
-    return render_template(
-        "edit_report.html",
-        reports=reports,
-        status=status,
-        type=type,
-        form=form
-        )'''
+    return render_template("edit_report.html",
+                           form=form,
+                           report_to_update=report_to_update
+                           )
 
 
 @app.route('/about')
