@@ -235,6 +235,7 @@ def edit(report_id):
 
     if request.method == 'GET':
         form.title.data = report_to_update.report_title
+        form.note.data = report_to_update.report_detail
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
     if form.validate_on_submit():
@@ -246,13 +247,16 @@ def edit(report_id):
             if Type.query.get(type_id)
         ]
         try:
+            db.session.add()
             db.session.commit()
             flash("The Report Was Successfully updated!")
             return render_template("edit_report.html",
                                    form=form,
                                    report_to_update=report_to_update
-                                   )
+                                   )      
+        # return redirect(url_for('edit', report_id=report_id))
         except Exception:
+            db.session.rollback()
             flash("Something Went Wrong!... please try again")
             return render_template("edit_report.html",
                                    form=form,

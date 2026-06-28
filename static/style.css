@@ -1,16 +1,23 @@
 /* Text */
 h1{
     color: #355872;
+    font-family: "Victor Mono", monospace;
 }
 
 a{
-    color: #355872
+    color: #355872;
+    font-family: "Victor Mono", monospace;
+}
+
+p{
+    font-family: "Victor Mono", monospace;
 }
 
 /* Header */
 header{
     background-color: #7AAACE;
     position: sticky;
+    top: 0;
     text-align: left;
     padding: 2%;
 }

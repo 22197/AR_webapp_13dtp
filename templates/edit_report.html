@@ -3,7 +3,7 @@
 <form method="POST"> 
     {{ form.hidden_tag() }} 
     {{ form.title.label(class_="form-label") }}
-    {{ form.title(class_="form-control", value=report_to_update.report_title) }} 
+    {{ form.title(class_="form-control") }} 
     <p>
         {{report_to_update.report_detail}}
     </p>
