@@ -138,7 +138,8 @@ class EditForm(FlaskForm):
         "title"
         )
     status = SelectField(
-        "status"
+        "status",
+        choices=[]
         )
     type = MultiCheckboxField(
         'type',
@@ -232,14 +233,20 @@ def edit(report_id):
         (str(rt.type_id), rt.type)
         for rt in Type.query.all()
     ]
+    form.status.choices = [
+        (str(s.status_id), s.status)
+        for s in Status.query.all()
+    ]
 
     if request.method == 'GET':
         form.title.data = report_to_update.report_title
         form.note.data = report_to_update.report_detail
+        form.status.data = str(report_to_update.status_id)
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
     if form.validate_on_submit():
         report_to_update.report_title = form.title.data
+        report_to_update.status_id = int(form.status.data)
         selected_type_ids = [int(type_id) for type_id in form.type.data]
         report_to_update.types = [
             Type.query.get(type_id)
@@ -247,7 +254,7 @@ def edit(report_id):
             if Type.query.get(type_id)
         ]
         try:
-            db.session.add()
+            db.session.add(report_to_update)
             db.session.commit()
             flash("The Report Was Successfully updated!")
             return render_template("edit_report.html",
