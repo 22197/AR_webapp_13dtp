@@ -18,11 +18,17 @@
     {{ form.status(class_="form-control") }}
     <br>
     {{ form.note.label(class_="form-label") }}
-    {{ form.note(class_="form-control") }} 
+    {{ form.note(class_="form-control") }}
+    <br>
+    {% if report_to_update.notes %}
+            {% for note in report_to_update.notes %}
+                <p>{{ note.note }}</p>
+            {% endfor %}
+    {% else %}
+        <p>No notes yet.</p>
+    {% endif %}
     <br>
     {{ form.update(class_="btn btn-primary") }}
 </form>
-<form method = "GET">
 
-</form>
 {% endblock%}

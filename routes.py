@@ -82,8 +82,8 @@ class Type(db.Model):
 
 
 # note table
-class Note(db.Model):
-    __tablename__ = "Note"
+class Notes(db.Model):
+    __tablename__ = "Notes"
     note_id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.String, nullable=False)
     report_id = db.Column(db.Integer, db.ForeignKey('Reports.report_id'),
@@ -240,8 +240,11 @@ def edit(report_id):
 
     if request.method == 'GET':
         form.title.data = report_to_update.report_title
-        form.note.data = report_to_update.report_detail
+
+        form.note.data = ''
+
         form.status.data = str(report_to_update.status_id)
+
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
     if form.validate_on_submit():
@@ -253,14 +256,28 @@ def edit(report_id):
             for type_id in selected_type_ids
             if Type.query.get(type_id)
         ]
+
+        if form.note.data:
+            note_text = form.note.data
+        else:
+            note_text = ""
+
+        if note_text:
+            new_note = Notes(
+                note=note_text,
+                report_id=report_to_update.report_id)
+            db.session.add(new_note)
+
         try:
             db.session.add(report_to_update)
             db.session.commit()
             flash("The Report Was Successfully updated!")
+            form.note.data = ""
+            report_to_update = Reports.query.get_or_404(report_id)
             return render_template("edit_report.html",
                                    form=form,
                                    report_to_update=report_to_update
-                                   )      
+                                   )
         # return redirect(url_for('edit', report_id=report_id))
         except Exception:
             db.session.rollback()
