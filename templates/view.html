@@ -11,7 +11,6 @@
     {% else %}
         No status
     {% endif %}
-    <br>
     {% if report.types %}
         {% for t in report.types %}
             {{ t.type }}{% if not loop.last %}, {% endif %} # loop except last, for comma

@@ -11,6 +11,17 @@ a{
 
 p{
     font-family: "Victor Mono", monospace;
+    font-size: 21px;
+}
+
+form input,
+form textarea {
+    margin-bottom: 3px;
+}
+
+.text-danger{
+    color: red;
+    font-family: "Victor Mono", monospace;
 }
 
 /* Header */
@@ -47,4 +58,37 @@ body{
     flex-wrap: wrap;
     justify-content: center;
     align-items: stretch;
+}
+
+.report-textbox{
+    width: 100%;
+    height:8%;
+}
+
+.report-textarea {
+    width: 100%;
+    max-width: 500px;
+    height: 150px;
+    resize: none;
+}
+
+form ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+form li {
+    margin-bottom: 6px;
+    font-family: "Victor Mono", monospace;
+}
+
+/* footer */
+footer{
+    margin-top: 2%;
+    border: 3px solid #9CD5FF;
+    text-align: center;
+    font-family: "Victor Mono", monospace;
+    padding: 20px;
+    margin-bottom: 20px;
 }

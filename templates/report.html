@@ -7,19 +7,21 @@
 </div>
 {% else %}
     <div class="centre">
-        <h1>Report</h1>
+        <u><h1>Report</h1></u>
     </div>
     <div class="centre">
-        <form method = "POST" novalidate> # prevent the browser doing error messages
+        <form method = "POST" novalidate>
             {{ form.hidden_tag() }} 
-            {{ form.title.label (class_ = "form-label") }}
-            {{ form.title(class_ = "form-control", placeholder = "title of report") }} # title
+            <p>Title of Report</p>
+            <br>
+            {{ form.title(class_ = "form-control report-textbox", placeholder = "title of report") }}
             {% for error in form.title.errors %}
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
             <br>
-            {{ form.report.label (class_ = "form-label") }}
-            {{ form.report(class_ = "form-control") }} # Please report any incidents here...
+            <p>Report</p>
+            <br>
+            {{ form.report(class_ = "form-control report-textarea") }} 
             {% for error in form.report.errors %}
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
