@@ -1,22 +1,33 @@
-'''Anonymous Report School - routes & code, Riki Smillie, 19/03/2026'''
+e"""Anonymous Report School - routes & code, Riki Smillie, 19/03/2026"""
+
 # imports
 # Flask
-from flask import Flask, flash, request, render_template
 # SQL
 import sqlite3
-# Flask Login
-import flask_login
-# SQL alchemy
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, select
-# FlaskForms
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectMultipleField, SelectField, widgets
-from wtforms.validators import DataRequired, Length
+
 # Datetime
 from datetime import datetime
 
+# Flask Login
+import flask_login
+from flask import Flask, flash, render_template, request
+
+# SQL alchemy
+from flask_sqlalchemy import SQLAlchemy
+
+# FlaskForms
+from flask_wtf import FlaskForm
+from sqlalchemy import ForeignKey, Integer, String, select
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from wtforms import (
+    SelectField,
+    SelectMultipleField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+    widgets,
+)
+from wtforms.validators import DataRequired, Length
 
 app = Flask(__name__)
 
@@ -31,23 +42,17 @@ db = SQLAlchemy(app)
 with app.app_context():
     db.create_all()
 
-app.config['SECRET_KEY'] = "really super secret key!"  # make sure to remove
+app.config["SECRET_KEY"] = "really super secret key!"  # make sure to remove
 
 # ______________________________________________________________________
 # Create db model
 # bridging table Report_Type (define before Reports class)
 Report_Type = db.Table(
-    'Report_Type',
+    "Report_Type",
     db.Column(
-        'report_id',
-        db.Integer,
-        db.ForeignKey('Reports.report_id'),
-        primary_key=True),
-    db.Column(
-        'type_id',
-        db.Integer,
-        db.ForeignKey('Type.type_id'),
-        primary_key=True)
+        "report_id", db.Integer, db.ForeignKey("Reports.report_id"), primary_key=True
+    ),
+    db.Column("type_id", db.Integer, db.ForeignKey("Type.type_id"), primary_key=True),
 )
 
 
@@ -59,12 +64,10 @@ class Reports(db.Model):
     report_detail = db.Column(db.String, nullable=False)
     report_time = db.Column(db.String, nullable=False)
     # status relationship
-    status_id = db.Column(db.Integer, db.ForeignKey('Status.status_id'),
-                          nullable=True
-                          )
-    status = db.relationship('Status', backref='reports')
+    status_id = db.Column(db.Integer, db.ForeignKey("Status.status_id"), nullable=True)
+    status = db.relationship("Status", backref="reports")
     # types relationship
-    types = db.relationship('Type', secondary=Report_Type, backref='reports')
+    types = db.relationship("Type", secondary=Report_Type, backref="reports")
 
 
 # status table (keep if needed elsewhere)
@@ -86,10 +89,10 @@ class Notes(db.Model):
     __tablename__ = "Notes"
     note_id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.String, nullable=False)
-    report_id = db.Column(db.Integer, db.ForeignKey('Reports.report_id'),
-                          nullable=False
-                          )
-    report = db.relationship('Reports', backref='notes')
+    report_id = db.Column(
+        db.Integer, db.ForeignKey("Reports.report_id"), nullable=False
+    )
+    report = db.relationship("Reports", backref="notes")
 
 
 # create Form class
@@ -107,75 +110,60 @@ class ReportForm(FlaskForm):
         "title",
         validators=[
             DataRequired(message="A title is required"),
-            Length(min=5,
-                   max=50,
-                   message="The title must be between 5 and 50 characters"),
-            ])
+            Length(
+                min=5, max=50, message="The title must be between 5 and 50 characters"
+            ),
+        ],
+    )
     # Report
     report = TextAreaField(
         "reports",
         validators=[
             DataRequired(message="An explanation is required"),
-            Length(min=21, message="A more detailed explanation is required")
-        ])
+            Length(min=21, message="A more detailed explanation is required"),
+        ],
+    )
     # Check Boxes
-    type = MultiCheckboxField('type',
-                              choices=[],
-                              validators=[
-                                  DataRequired(
-                                      message="Please select a category"
-                                      ),
-                              ])
+    type = MultiCheckboxField(
+        "type",
+        choices=[],
+        validators=[
+            DataRequired(message="Please select a category"),
+        ],
+    )
     # Submit
-    submit = SubmitField(
-        "Submit"
-        )
+    submit = SubmitField("Submit")
 
 
 # Edit form
 class EditForm(FlaskForm):
-    title = StringField(
-        "title"
-        )
-    status = SelectField(
-        "status",
-        choices=[]
-        )
-    type = MultiCheckboxField(
-        'type',
-        choices=[]
-        )
+    title = StringField("title")
+    status = SelectField("status", choices=[])
+    type = MultiCheckboxField("type", choices=[])
 
-    note = TextAreaField(
-        "note",
-        validators=[]
-        )
-    update = SubmitField(
-        "Update"
-        )
+    note = TextAreaField("note", validators=[])
+    update = SubmitField("Update")
+
 
 # ______________________________________________________________________
 # routes
 
 
 # route report.html
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def report():
     title = None
     report = None
     form = ReportForm()
     # Check boxes
-    form.type.choices = [
-        (str(rt.type_id), rt.type)
-        for rt in Type.query.all()
-        ]
+    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
-        form.title.data = ''  # reset for the next times
+        form.title.data = ""  # reset for the next times
 
         report = form.report.data
-        form.report.data = ''
+        form.report.data = ""
 
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -186,7 +174,7 @@ def report():
             report_detail=report,
             report_time=report_time,
             status_id=status_id,
-            )
+        )
 
         #####
         types = form.type.data
@@ -199,49 +187,35 @@ def report():
                 # Add the Type object to the report's many-to-many relationship
                 new_report.types.append(type_obj)
 
-        form.type.data = ''
+        form.type.data = ""
 
         db.session.add(new_report)
         db.session.commit()
-        return render_template("report.html",
-                               title=title,
-                               form=form
-                               )
+        return render_template("report.html", title=title, form=form)
     else:
         return render_template("report.html", form=form)
     # write render error messages
 
 
-@app.route('/view')
+@app.route("/view")
 def view():
     reports = Reports.query.all()
     status = Status.query.all()
     types = Type.query.all()
-    return render_template(
-        "view.html",
-        reports=reports,
-        status=status,
-        types=types
-    )
+    return render_template("view.html", reports=reports, status=status, types=types)
 
 
-@app.route('/edit/<int:report_id>', methods=['GET', 'POST'])
+@app.route("/edit/<int:report_id>", methods=["GET", "POST"])
 def edit(report_id):
     form = EditForm()
     report_to_update = Reports.query.get_or_404(report_id)
-    form.type.choices = [
-        (str(rt.type_id), rt.type)
-        for rt in Type.query.all()
-    ]
-    form.status.choices = [
-        (str(s.status_id), s.status)
-        for s in Status.query.all()
-    ]
+    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
+    form.status.choices = [(str(s.status_id), s.status) for s in Status.query.all()]
 
-    if request.method == 'GET':
+    if request.method == "GET":
         form.title.data = report_to_update.report_title
 
-        form.note.data = ''
+        form.note.data = ""
 
         form.status.data = str(report_to_update.status_id)
 
@@ -263,9 +237,7 @@ def edit(report_id):
             note_text = ""
 
         if note_text:
-            new_note = Notes(
-                note=note_text,
-                report_id=report_to_update.report_id)
+            new_note = Notes(note=note_text, report_id=report_to_update.report_id)
             db.session.add(new_note)
 
         try:
@@ -274,32 +246,30 @@ def edit(report_id):
             flash("The Report Was Successfully updated!")
             form.note.data = ""
             report_to_update = Reports.query.get_or_404(report_id)
-            return render_template("edit_report.html",
-                                   form=form,
-                                   report_to_update=report_to_update
-                                   )
+            return render_template(
+                "edit_report.html", form=form, report_to_update=report_to_update
+            )
         # return redirect(url_for('edit', report_id=report_id))
         except Exception:
             db.session.rollback()
             flash("Something Went Wrong!... please try again")
-            return render_template("edit_report.html",
-                                   form=form,
-                                   report_to_update=report_to_update
-                                   )
-    return render_template("edit_report.html",
-                           form=form,
-                           report_to_update=report_to_update
-                           )
+            return render_template(
+                "edit_report.html", form=form, report_to_update=report_to_update
+            )
+    return render_template(
+        "edit_report.html", form=form, report_to_update=report_to_update
+    )
 
 
-@app.route('/about')
+@app.route("/about")
 def about():
     return render_template("about.html")
 
 
-@app.route('/404')
+@app.route("/404")
 def _404():
     return render_template("404.html")
+
 
 # _______________________________________________________________________
 
