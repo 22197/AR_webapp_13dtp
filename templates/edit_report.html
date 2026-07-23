@@ -21,7 +21,7 @@
     {{ form.note(class_="form-control") }}
     <br>
     {% if report_to_update.notes %}
-            {% for note in report_to_update.notes %}
+            {% for note in report_to_update.notes|reverse %}
                 <p>{{ note.note }}</p>
             {% endfor %}
     {% else %}

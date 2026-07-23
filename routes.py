@@ -116,7 +116,7 @@ class ReportForm(FlaskForm):
         "reports",
         validators=[
             DataRequired(message="An explanation is required"),
-            Length(min=20, message="A more detailed explanation is required")
+            Length(min=21, message="A more detailed explanation is required")
         ])
     # Check Boxes
     type = MultiCheckboxField('type',
