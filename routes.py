@@ -1,4 +1,4 @@
-e"""Anonymous Report School - routes & code, Riki Smillie, 19/03/2026"""
+"""Anonymous Report School - routes & code, Riki Smillie, 19/03/2026"""
 
 # imports
 # Flask
@@ -260,16 +260,23 @@ def edit(report_id):
         "edit_report.html", form=form, report_to_update=report_to_update
     )
 
+@app.route("/login")
+def login():
+    
+@app.route("/createuser")
+def login():
+    
+
+
 
 @app.route("/about")
 def about():
     return render_template("about.html")
 
 
-@app.route("/404")
-def _404():
-    return render_template("404.html")
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 # _______________________________________________________________________
 
