@@ -197,9 +197,16 @@ def report():
     # write render error messages
 
 
-@app.route("/view")
+@app.route("/view", methods=["GET"])
 def view():
-    reports = Reports.query.all()
+    sort = request.args.get("sort", "original")
+    if sort == "status":
+        reports = Reports.query.join(Status).order_by(Status.status.asc()).all()
+    elif sort == "type":
+        reports = Reports.query.join(Reports.types).order_by(Type.type.asc()).all()
+    else:
+        reports = Reports.query.order_by(Reports.report_id.asc()).all()
+        
     status = Status.query.all()
     types = Type.query.all()
     return render_template("view.html", reports=reports, status=status, types=types)
@@ -259,15 +266,6 @@ def edit(report_id):
     return render_template(
         "edit_report.html", form=form, report_to_update=report_to_update
     )
-
-@app.route("/login")
-def login():
-    
-@app.route("/createuser")
-def login():
-    
-
-
 
 @app.route("/about")
 def about():
