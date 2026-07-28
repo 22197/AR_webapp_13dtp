@@ -178,11 +178,14 @@ def report():
 
         status_id = 3
 
+        priority_id = 6
+
         new_report = Reports(
             report_title=title,
             report_detail=report,
             report_time=report_time,
             status_id=status_id,
+            priority_id=priority_id
         )
 
         #####
@@ -213,6 +216,8 @@ def view():
         reports = Reports.query.join(Status).order_by(Status.status.asc()).all()
     elif sort == "type":
         reports = Reports.query.join(Reports.types).order_by(Type.type.asc()).all()
+    elif sort == "priority":
+        reports = Reports.query.join(Priority).order_by(Priority.priority.asc()).all()
     else:
         reports = Reports.query.order_by(Reports.report_id.asc()).all()
         
