@@ -6,9 +6,9 @@
 <form method="get" action="/view" id="sortForm">
     <label for="sort">Sort reports by:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
-        <option value="original">Original order</option>
-        <option value="status">Status</option>
-        <option value="type">Type</option>
+        <option value="original" {% if sort == 'original' %}selected{% endif %}>Original order</option>
+        <option value="status" {% if sort == 'status' %}selected{% endif %}>Status</option>
+        <option value="type" {% if sort == 'type' %}selected{% endif %}>Type</option>
     </select>
 </form>
 
@@ -20,6 +20,13 @@
         {{ report.status.status }}
     {% else %}
         No status
+    {% endif %}
+    <br>
+        Priority
+    {% if report.priority %}
+        {{ report.priority.priority }}
+    {% else %}
+        No
     {% endif %}
     <br>
     Category:

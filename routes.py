@@ -66,6 +66,9 @@ class Reports(db.Model):
     # status relationship
     status_id = db.Column(db.Integer, db.ForeignKey("Status.status_id"), nullable=True)
     status = db.relationship("Status", backref="reports")
+    # priority relationship
+    priority_id = db.Column(db.Integer, db.ForeignKey("Priority.priority_id"), nullable=True)
+    priority = db.relationship("Priority", backref="reports")
     # types relationship
     types = db.relationship("Type", secondary=Report_Type, backref="reports")
 
@@ -75,6 +78,12 @@ class Status(db.Model):
     __tablename__ = "Status"
     status_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String, nullable=False)
+
+# priority table
+class Priority(db.Model):
+    __tablename__ = "Priority"
+    priority_id = db.Column(db.Integer, primary_key=True)
+    priority = db.Column(db.String, nullable=False)
 
 
 # type table
@@ -209,7 +218,10 @@ def view():
         
     status = Status.query.all()
     types = Type.query.all()
-    return render_template("view.html", reports=reports, status=status, types=types)
+    priority = Priority.query.all()
+    return render_template(
+        "view.html", reports=reports, status=status, types=types, sort=sort, priority=priority
+    )
 
 
 @app.route("/edit/<int:report_id>", methods=["GET", "POST"])
