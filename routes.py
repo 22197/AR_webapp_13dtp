@@ -149,7 +149,7 @@ class EditForm(FlaskForm):
     title = StringField("title")
     status = SelectField("status", choices=[])
     type = MultiCheckboxField("type", choices=[])
-
+    priority = SelectField("priority", choices=[])
     note = TextAreaField("note", validators=[])
     update = SubmitField("Update")
 
@@ -235,6 +235,7 @@ def edit(report_id):
     report_to_update = Reports.query.get_or_404(report_id)
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
     form.status.choices = [(str(s.status_id), s.status) for s in Status.query.all()]
+    form.priority.choices = [(str(p.priority_id), p.priority) for p in Priority.query.all()]
 
     if request.method == "GET":
         form.title.data = report_to_update.report_title
@@ -243,11 +244,14 @@ def edit(report_id):
 
         form.status.data = str(report_to_update.status_id)
 
+        form.priority.data = str(report_to_update.priority_id)
+
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
     if form.validate_on_submit():
         report_to_update.report_title = form.title.data
         report_to_update.status_id = int(form.status.data)
+        report_to_update.priority_id = int(form.priority.data)
         selected_type_ids = [int(type_id) for type_id in form.type.data]
         report_to_update.types = [
             Type.query.get(type_id)
