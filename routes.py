@@ -104,7 +104,7 @@ class Notes(db.Model):
     report = db.relationship("Reports", backref="notes")
 
 
-# create Form class
+# FORMS
 # Check Boxes
 class MultiCheckboxField(SelectMultipleField):
     # render the field as a list of checkboxes
@@ -130,6 +130,7 @@ class ReportForm(FlaskForm):
         validators=[
             DataRequired(message="An explanation is required"),
             Length(min=21, message="A more detailed explanation is required"),
+            Length(max=4000, message="Please write a more consise explanation"),
         ],
     )
     # Check Boxes
@@ -153,6 +154,20 @@ class EditForm(FlaskForm):
     note = TextAreaField("note", validators=[])
     update = SubmitField("Update")
 
+
+# Login form
+class LoginForm(FlaskForm):
+    user_name = StringField("user_name")
+    password = StringField("password")   
+    # Submit
+    submit = SubmitField("Submit") 
+
+# sign up form
+class SignupForm(FlaskForm):
+    user_name = StringField("user_name")
+    password = StringField("password")  
+    # Submit
+    submit = SubmitField("Submit")
 
 # ______________________________________________________________________
 # routes
