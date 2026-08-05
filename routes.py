@@ -8,9 +8,20 @@ import sqlite3
 # Datetime
 from datetime import datetime
 
-# Flask Login
-import flask_login
+# Flask
 from flask import Flask, flash, render_template, request
+# hash
+from flask_bcrypt import Bcrypt
+
+# Flask Login
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 
 # SQL alchemy
 from flask_sqlalchemy import SQLAlchemy
@@ -27,7 +38,7 @@ from wtforms import (
     TextAreaField,
     widgets,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, ValidationError
 
 app = Flask(__name__)
 
@@ -36,13 +47,20 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+app.config["SECRET_KEY"] = "really super secret key!"  # make sure to remove
+
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+
+#login 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
 
 # Create the database tables
 with app.app_context():
     db.create_all()
-
-app.config["SECRET_KEY"] = "really super secret key!"  # make sure to remove
 
 # ______________________________________________________________________
 # Create db model
@@ -102,6 +120,13 @@ class Notes(db.Model):
         db.Integer, db.ForeignKey("Reports.report_id"), nullable=False
     )
     report = db.relationship("Reports", backref="notes")
+
+#user table
+class User(db.Model):
+    __tablename__ = "User"
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False )
 
 
 # FORMS
@@ -168,6 +193,16 @@ class SignupForm(FlaskForm):
     password = StringField("password")  
     # Submit
     submit = SubmitField("Submit")
+
+    def validate_username(self, user_name):
+        existing_user_name = User.query.filter_by(
+            user_name=user_name.data).first()
+        if existing_user_name:
+            raise ValidationError(
+                "This username already exists. Please choose another one."
+            )
+            
+    
 
 # ______________________________________________________________________
 # routes
@@ -302,6 +337,31 @@ def edit(report_id):
     return render_template(
         "edit_report.html", form=form, report_to_update=report_to_update
     )
+
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(user_name=form.user_name.data, password=hash_password)
+        db.session.add(new_user)
+        db.session.commit()
+    return render_template("sign_up.html", form=form, )
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(user_name=form.user_name.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            return render_template("view.html")
+    return render_template("sign_up.html", form=form, )
+
+@app.route("/logout", methods=["GET", "POST"])
+
 
 @app.route("/about")
 def about():

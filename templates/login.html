@@ -1,4 +1,9 @@
 {%extends "layout.html"%}
 {%block content%}
-
+<form method = "POST">
+    {{ form.hidden_tag() }}
+    {{ form.user_name() }}
+    {{ form.password() }}
+    {{ form.submit }} 
+</form>
 {% endblock%}
