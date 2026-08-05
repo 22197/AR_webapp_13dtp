@@ -361,6 +361,9 @@ def login():
     return render_template("sign_up.html", form=form, )
 
 @app.route("/logout", methods=["GET", "POST"])
+def logout():
+    logout_user()
+    return render_template("report.html")
 
 
 @app.route("/about")
