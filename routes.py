@@ -1,15 +1,13 @@
 """Anonymous Report School - routes & code, Riki Smillie, 19/03/2026"""
 
 # imports
-# Flask
-# SQL
-import sqlite3
 
 # Datetime
 from datetime import datetime
 
 # Flask
-from flask import Flask, flash, render_template, redirect, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
+
 # hash
 from flask_bcrypt import Bcrypt
 
@@ -31,10 +29,10 @@ from flask_wtf import FlaskForm
 from sqlalchemy import ForeignKey, Integer, String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from wtforms import (
+    PasswordField,
     SelectField,
     SelectMultipleField,
     StringField,
-    PasswordField,
     SubmitField,
     TextAreaField,
     widgets,
@@ -376,7 +374,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return render_template("report.html")
+    return redirect(url_for("report"))
 
 
 @app.route("/about")

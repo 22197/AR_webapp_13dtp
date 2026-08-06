@@ -1,6 +1,10 @@
 <nav>
     <a href="http://127.0.0.1:5000/" class="h_link">Report Incident</a>
     <a href="http://127.0.0.1:5000/about" class="h_link">About This Website</a>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+    
 
 </nav>
 
