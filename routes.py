@@ -9,7 +9,7 @@ import sqlite3
 from datetime import datetime
 
 # Flask
-from flask import Flask, flash, render_template, request
+from flask import Flask, flash, render_template, redirect, request, url_for
 # hash
 from flask_bcrypt import Bcrypt
 
@@ -34,6 +34,7 @@ from wtforms import (
     SelectField,
     SelectMultipleField,
     StringField,
+    PasswordField,
     SubmitField,
     TextAreaField,
     widgets,
@@ -56,6 +57,10 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 # Create the database tables
@@ -122,11 +127,14 @@ class Notes(db.Model):
     report = db.relationship("Reports", backref="notes")
 
 #user table
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "User"
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False )
+
+    def get_id(self):
+        return str(self.user_id)
 
 
 # FORMS
@@ -183,18 +191,18 @@ class EditForm(FlaskForm):
 # Login form
 class LoginForm(FlaskForm):
     user_name = StringField("user_name")
-    password = StringField("password")   
+    password = PasswordField("password")   
     # Submit
     submit = SubmitField("Submit") 
 
 # sign up form
 class SignupForm(FlaskForm):
     user_name = StringField("user_name")
-    password = StringField("password")  
+    password = PasswordField("password")  
     # Submit
     submit = SubmitField("Submit")
 
-    def validate_username(self, user_name):
+    def validate_user_name(self, user_name):
         existing_user_name = User.query.filter_by(
             user_name=user_name.data).first()
         if existing_user_name:
@@ -260,6 +268,7 @@ def report():
 
 
 @app.route("/view", methods=["GET"])
+@login_required
 def view():
     sort = request.args.get("sort", "original")
     if sort == "status":
@@ -280,6 +289,7 @@ def view():
 
 
 @app.route("/edit/<int:report_id>", methods=["GET", "POST"])
+@login_required
 def edit(report_id):
     form = EditForm()
     report_to_update = Reports.query.get_or_404(report_id)
@@ -340,6 +350,7 @@ def edit(report_id):
 
 
 @app.route("/signup", methods=["GET", "POST"])
+@login_required
 def signup():
     form = SignupForm()
     if form.validate_on_submit():
@@ -347,6 +358,7 @@ def signup():
         new_user = User(user_name=form.user_name.data, password=hash_password)
         db.session.add(new_user)
         db.session.commit()
+        return render_template("sign_up.html", form=form, )
     return render_template("sign_up.html", form=form, )
 
 
@@ -357,10 +369,11 @@ def login():
         user = User.query.filter_by(user_name=form.user_name.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
-            return render_template("view.html")
-    return render_template("sign_up.html", form=form, )
+            return redirect(url_for("view"))
+    return render_template("login.html", form=form, )
 
 @app.route("/logout", methods=["GET", "POST"])
+@login_required
 def logout():
     logout_user()
     return render_template("report.html")
