@@ -130,6 +130,7 @@ class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False )
+    teacher_code = db.Column(db.String, nullable=False, unique=True)
 
     def get_id(self):
         return str(self.user_id)
@@ -196,7 +197,8 @@ class LoginForm(FlaskForm):
 # sign up form
 class SignupForm(FlaskForm):
     user_name = StringField("user_name")
-    password = PasswordField("password")  
+    password = PasswordField("password") 
+    teacher_code = StringField("teacher-code") 
     # Submit
     submit = SubmitField("Submit")
 
@@ -353,10 +355,10 @@ def signup():
     form = SignupForm()
     if form.validate_on_submit():
         hash_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(user_name=form.user_name.data, password=hash_password)
+        new_user = User(user_name=form.user_name.data, teacher_code=form.teacher_code.data, password=hash_password)
         db.session.add(new_user)
         db.session.commit()
-        return render_template("sign_up.html", form=form, )
+        return redirect(url_for("login"))
     return render_template("sign_up.html", form=form, )
 
 

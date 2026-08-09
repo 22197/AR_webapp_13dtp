@@ -2,8 +2,12 @@
 {%block content%}
 <form method = "POST">
     {{ form.hidden_tag() }}
-    {{ form.user_name() }}
-    {{ form.password() }}
+    <p>username</p>
+    {{ form.user_name() }} <br>
+    <p>password</p>
+    {{ form.password() }}<br>
+    <p>teacher code</p>
+    {{ form.teacher_code()}}<br>
     {{ form.submit }} 
 </form>
 {% endblock%}
