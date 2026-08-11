@@ -123,6 +123,10 @@ class Notes(db.Model):
         db.Integer, db.ForeignKey("Reports.report_id"), nullable=False
     )
     report = db.relationship("Reports", backref="notes")
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("User.user_id"), nullable=False
+    )
+    user = db.relationship("User", backref="notes")
 
 #user table
 class User(UserMixin, db.Model):
@@ -189,17 +193,52 @@ class EditForm(FlaskForm):
 
 # Login form
 class LoginForm(FlaskForm):
-    user_name = StringField("user_name")
-    password = PasswordField("password")   
+    user_name = StringField(
+        "user_name",
+        validators=[
+            DataRequired(message="You forgot to enter your username!"),
+            Length(max=20, message="Your username is too long."),
+        ],
+        )
+    password = PasswordField(
+        "password",
+        validators=[
+            DataRequired(message="You forgot to enter your password!"),
+            Length(max=20, message="Your password is too long."),
+        ],
+        )   
     # Submit
     submit = SubmitField("Submit") 
 
 # sign up form
 class SignupForm(FlaskForm):
-    user_name = StringField("user_name")
-    password = PasswordField("password") 
-    teacher_code = StringField("teacher-code") 
-    # Submit
+    user_name = StringField(
+        "user_name",
+        validators=[
+            DataRequired(message="You must enter a username."),
+            Length(max=20, message="The username must be below 20 characters."),
+        ],
+    )
+    password = PasswordField(
+        "password",
+        validators=[
+            DataRequired(message="You must enter a password."),
+            Length(
+                min=8,
+                message="Please use a stronger password that is above 8 characters.",
+            ),
+            Length(
+                max=30,
+                message="The password must be below 30 characters."),
+        ],
+    )
+    teacher_code = StringField(
+        "teacher_code",
+        validators=[
+            DataRequired(message="You must enter a teacher code."),
+            Length(min=3, max=3, message="The teacher code must be exactly 3 characters long."),
+        ],
+    )
     submit = SubmitField("Submit")
 
     def validate_user_name(self, user_name):
@@ -355,11 +394,13 @@ def signup():
     form = SignupForm()
     if form.validate_on_submit():
         hash_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(user_name=form.user_name.data, teacher_code=form.teacher_code.data, password=hash_password)
+        new_user = User(user_name=form.user_name.data,
+                        teacher_code=form.teacher_code.data,
+                        password=hash_password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for("login"))
-    return render_template("sign_up.html", form=form, )
+    return render_template("sign_up.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
