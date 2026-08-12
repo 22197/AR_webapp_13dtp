@@ -2,10 +2,14 @@
     <a href="http://127.0.0.1:5000/" class="h_link">Report Incident</a>
     <a href="http://127.0.0.1:5000/about" class="h_link">About This Website</a>
     {% if current_user.is_authenticated %}
-        <a href="http://127.0.0.1:5000/view" class="h_link">Reports</a>
-        <a href="http://127.0.0.1:5000/signup" class="h_link">Sign up</a>
-        <span>{{current_user.teacher_code}}</span>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <div class="nav-left">
+            <a href="http://127.0.0.1:5000/view" class="h_link">Reports</a>
+            <a href="http://127.0.0.1:5000/signup" class="h_link">Sign up</a>
+        </div>
+        <div class="user_info">
+            <p>{{ current_user.teacher_code }}</p>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
     {% endif %}
     
 

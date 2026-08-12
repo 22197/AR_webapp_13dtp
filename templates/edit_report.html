@@ -2,6 +2,13 @@
 {%block content%}
 <form method="POST"> 
     {{ form.hidden_tag() }} 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="text-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     {{ form.title.label(class_="form-label") }}
     {{ form.title(class_="form-control") }} 
     <p>

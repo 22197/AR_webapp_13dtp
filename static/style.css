@@ -17,18 +17,20 @@ p{
 form input,
 form textarea {
     margin-bottom: 3px;
+    font-family: "Victor Mono", monospace;
 }
 
 .text-danger{
     color: red;
     font-family: "Victor Mono", monospace;
+    font-size: 13px;
 }
 
 /* Header */
 header{
     background-color: #7AAACE;
     position: sticky;
-    top: 0;
+    top: 0%;
     text-align: left;
     padding: 2%;
 }
@@ -44,6 +46,20 @@ header{
 
 .h_link:hover{
     background-color: #9CD5FF;
+}
+
+.nav-left{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user_info{
+    font-family: "Victor Mono", monospace;
+    padding: 2%;
+    margin-right: 5%;
+    text-align: right;
 }
 
 

@@ -208,7 +208,8 @@ class LoginForm(FlaskForm):
         ],
         )   
     # Submit
-    submit = SubmitField("Submit") 
+    submit = SubmitField("Submit")  
+
 
 # sign up form
 class SignupForm(FlaskForm):
@@ -411,7 +412,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
             return redirect(url_for("view"))
-    return render_template("login.html", form=form, )
+        flash("Your username or password is wrong!!", "danger")
+    return render_template("login.html", form=form)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
