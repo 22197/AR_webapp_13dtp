@@ -1,8 +1,11 @@
 <nav>
-    <a href="http://127.0.0.1:5000/" class="h_link">Report Incident</a>
-    <a href="http://127.0.0.1:5000/about" class="h_link">About This Website</a>
+    <div class="nav-left">
+        <a href="http://127.0.0.1:5000/" class="link"><img class="logo" src="/static/images/Logo.png" alt="Logo" ></a>
+        <a href="http://127.0.0.1:5000/" class="h_link">Report Incident</a>
+        <a href="http://127.0.0.1:5000/about" class="h_link">About This Website</a>
+    </div>
     {% if current_user.is_authenticated %}
-        <div class="nav-left">
+        <div class="nav-right">
             <a href="http://127.0.0.1:5000/view" class="h_link">Reports</a>
             <a href="http://127.0.0.1:5000/signup" class="h_link">Sign up</a>
         </div>

@@ -27,39 +27,68 @@ form textarea {
 }
 
 /* Header */
-header{
+.logo {
+    width: auto; 
+    height: 50px;
+    vertical-align: middle;
+}
+
+
+header {
     background-color: #7AAACE;
     position: sticky;
-    top: 0%;
-    text-align: left;
-    padding: 2%;
+    top: 0;
+    z-index: 10;
+    padding: 1rem 2rem;
 }
 
-.h_link{
-    background-color: #F7F8F0;
-    padding: 10px 20px;
-    border-radius:5px;
-    border-color: #355872;
-    text-decoration:none;
-    color: #355872;
-}
-
-.h_link:hover{
-    background-color: #9CD5FF;
-}
-
-.nav-left{
+header nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
-.user_info{
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+
+.h_link {
+    background-color: #F7F8F0;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #355872;
+}
+
+.h_link:hover {
+    background-color: #9CD5FF;
+}
+
+.user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
     font-family: "Victor Mono", monospace;
-    padding: 2%;
-    margin-right: 5%;
-    text-align: right;
+    margin-top: 0.25rem;
+}
+
+.user_info p {
+    margin: 0;
 }
 
 
