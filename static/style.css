@@ -1,28 +1,28 @@
-/* Text */
-h1{
-    color: #355872;
+html, body {
     font-family: "Victor Mono", monospace;
+}
+
+/* Text */
+h1 {
+    color: #355872;
 }
 
 a{
     color: #355872;
-    font-family: "Victor Mono", monospace;
 }
 
 p{
-    font-family: "Victor Mono", monospace;
     font-size: 21px;
 }
+
 
 form input,
 form textarea {
     margin-bottom: 3px;
-    font-family: "Victor Mono", monospace;
 }
 
 .text-danger{
     color: red;
-    font-family: "Victor Mono", monospace;
     font-size: 13px;
 }
 
@@ -33,12 +33,10 @@ form textarea {
     vertical-align: middle;
 }
 
-
 header {
     background-color: #7AAACE;
     position: sticky;
     top: 0;
-    z-index: 10;
     padding: 1rem 2rem;
 }
 
@@ -57,14 +55,12 @@ header nav {
     flex-wrap: wrap;
 }
 
-
 .nav-left {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
 }
-
 
 .h_link {
     background-color: #F7F8F0;
@@ -83,7 +79,6 @@ header nav {
     flex-direction: column;
     align-items: flex-end;
     gap: 0.25rem;
-    font-family: "Victor Mono", monospace;
     margin-top: 0.25rem;
 }
 
@@ -92,12 +87,13 @@ header nav {
 }
 
 
-/*  */
+/* body */
 body{
     background-color: #F7F8F0;
 }
 
-/* report.html */
+/* layout */
+
 .centre{
     display: flex;
     flex-wrap: wrap;
@@ -105,6 +101,12 @@ body{
     align-items: stretch;
 }
 
+.list{
+    
+}
+
+
+/* report.html */
 .report-textbox{
     width: 100%;
     height:8%;
@@ -117,6 +119,7 @@ body{
     resize: none;
 }
 
+ /* form */
 form ul {
     list-style: none;
     padding: 0;
@@ -125,7 +128,6 @@ form ul {
 
 form li {
     margin-bottom: 6px;
-    font-family: "Victor Mono", monospace;
 }
 
 /* footer */
