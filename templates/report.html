@@ -21,7 +21,7 @@
             <br>
             <p>Report</p>
             <br>
-            {{ form.report(class_ = "form-control report-textarea") }} 
+            {{ form.report(class_ = "form-control report-textarea", placeholder = "Please write details for your report.") }} 
             {% for error in form.report.errors %}
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
@@ -35,7 +35,7 @@
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
             <br/>
-            {{ form.submit(class_ = "btn btn-primary") }}
+            {{ form.submit(class_ = "form_button") }}
         </form>
     </div>
 {% endif %}
