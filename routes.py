@@ -224,7 +224,7 @@ class SignupForm(FlaskForm):
             DataRequired(message="You must enter a password."),
             Length(
                 min=8,
-                message="Please use a stronger password that is atleast 8 characters.",
+                message="Please use a stronger password that is at least 8 characters.",
             ),
             Length(
                 max=30,
@@ -246,6 +246,13 @@ class SignupForm(FlaskForm):
         if existing_user_name:
             raise ValidationError(
                 "This username already exists. Please choose another one."
+            )
+    def validate_teacher_code(self, teacher_code):
+        existing_code = User.query.filter_by(
+            teacher_code=teacher_code.data).first()
+        if existing_code:
+            raise ValidationError(
+                "This Teacher Code already exists. Please choose another one."
             )
             
     
