@@ -31,7 +31,9 @@
     <br>
     {% if report_to_update.notes %}
             {% for note in report_to_update.notes|reverse %}
+            <div class="notes">
                 <p>{{ note.note }}</p>
+            </div>
             {% endfor %}
     {% else %}
         <p>No notes yet.</p>

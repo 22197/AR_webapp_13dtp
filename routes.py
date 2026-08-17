@@ -224,7 +224,7 @@ class SignupForm(FlaskForm):
             DataRequired(message="You must enter a password."),
             Length(
                 min=8,
-                message="Please use a stronger password that is above 8 characters.",
+                message="Please use a stronger password that is atleast 8 characters.",
             ),
             Length(
                 max=30,

@@ -12,7 +12,7 @@ a{
 }
 
 p{
-    font-size: 21px;
+    font-size: 17px;
 }
 
 form input,
@@ -23,6 +23,10 @@ form textarea {
 .text-danger {
     color: red;
     font-size: 13px;
+}
+
+.add_info {
+    font-size: 10px; 
 }
 
 .report_name { /* view.html */
@@ -37,6 +41,7 @@ form textarea {
     width: auto; 
     height: 50px;
     vertical-align: middle;
+    border-radius: 5px;
 }
 
 header {
@@ -87,7 +92,7 @@ header nav {
     gap: 0.25rem;
     margin-top: 0.25rem;
     border: 3px solid #9CD5FF;
-    padding: 0.25rem;
+    padding: 1rem 1.5rem;
     background-color: #F7F8F0;
     border-radius: 25%;
 }
@@ -100,7 +105,10 @@ header nav {
 /* body */
 body{
     background-color: #F7F8F0;
+    margin-left: 5%;
+    margin-right: 5%;
 }
+
 
 /* layout */
 
@@ -110,11 +118,6 @@ body{
     justify-content: center;
     align-items: stretch;
 }
-
-.list {
-
-}
-
 
 /* report.html */
 .report-textbox {
@@ -130,12 +133,31 @@ body{
 }
 
 /* view.html */
-.list {
-    margin-left: 5%;
-    margin-right: 5%;
+.reports {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    border: 3px solid #9CD5FF;
+    background-color: whitesmoke;
+    border-radius: 0.8rem;
+    margin-bottom: 1rem;
+    padding: 0.15rem 1.5rem;
+    overflow-wrap: break-word;
 }
 
-.reports {
+.right_info {
+    margin-right: 1rem;
+    line-height: 0.25rem;
+}
+
+.sorting {
+    margin-bottom: 1rem;
+}
+
+/* edit.html*/
+
+.notes {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -147,15 +169,7 @@ body{
     margin-bottom: 1rem;
 }
 
-.right_info {
-    margin-right: 1rem;
-    max-width: 250px;
-    overflow-wrap: break-word;
-}
 
-.sorting {
-    margin-bottom: 1rem;
-}
 
  /* form */
 form ul {

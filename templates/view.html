@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="list">
+<div class="block">
     <h1>Reports</h1>
     <div class="sorting">
         <form method="get" action="/view" id="sortForm">
@@ -18,34 +18,36 @@
     {% for report in reports %}
         <div class="reports">
             <a href="http://127.0.0.1:5000/edit/{{ report.report_id }}" class="report_name">{{ report.report_title }}</a>
-            <p>
-            <u>Status:</u>
-            {% if report.status %}
-                {{ report.status.status }}
-            {% else %}
-                No status
-            {% endif %}
-            </p>
-            <br>
-            <p>
-            <u>Priority:</u>
-            {% if report.priority %}
-                {{ report.priority.priority }}
-            {% else %}
-                No
-            {% endif %}
-            </p>
-            <br>
-            <p>
-            <u>Category:</u>
-            {% if report.types %}
-                {% for t in report.types %}
-                    {{ t.type }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            {% else %}
-                No type
-            {% endif %}
-            </p>
+            <div class="right_info">
+                <p>
+                <u>Status:</u>
+                {% if report.status %}
+                    {{ report.status.status }}
+                {% else %}
+                    No status
+                {% endif %}
+                </p>
+                <br>
+                <p>
+                <u>Priority:</u>
+                {% if report.priority %}
+                    {{ report.priority.priority }}
+                {% else %}
+                    No
+                {% endif %}
+                </p>
+                <br>
+                <p>
+                <u>Category:</u>
+                {% if report.types %}
+                    {% for t in report.types %}
+                        {{ t.type }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No type
+                {% endif %}
+                </p>
+            </div>
         </div>
     {% endfor %}
 </div>
