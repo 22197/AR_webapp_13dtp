@@ -26,13 +26,16 @@
         {{ form.priority.label(class_="form-label") }}
         {{ form.priority(class_="form-control") }}
         <br>
+        <p>Add a note</p>
+        {{ form.note(class_="form-control, note-textarea") }}
+        <br>
+        {{ form.update(class_="btn btn-primary") }}
 </div>
-    <p>Add a note</p>
-    {{ form.note(class_="form-control, note-textarea") }}
+    <p>Notes: </p>
     {% if report_to_update.notes %}
             {% for note in report_to_update.notes|reverse %}
             <div class="notes">
-                <p>{{ note.note }}</p>
+                <p>{{ note.user.teacher_code}} - {{ note.note }}</p>
             </div>
             {% endfor %}
     {% else %}

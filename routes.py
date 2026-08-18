@@ -126,7 +126,7 @@ class Notes(db.Model):
     )
     user = db.relationship("User", backref="notes")
 
-#user table
+#user tabler
 class User(UserMixin, db.Model):
     __tablename__ = "User"
     user_id = db.Column(db.Integer, primary_key=True)
@@ -370,7 +370,11 @@ def edit(report_id):
             note_text = ""
 
         if note_text:
-            new_note = Notes(note=note_text, report_id=report_to_update.report_id)
+            new_note = Notes(
+                note=note_text, 
+                report_id=report_to_update.report_id,
+                user_id=current_user.user_id
+                )
             db.session.add(new_note)
 
         try:
