@@ -1,34 +1,34 @@
 {%extends "layout.html"%}
 {%block content%}
-<form method="POST"> 
-    {{ form.hidden_tag() }} 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="text-danger">{{ message }}</div>
+<div class="reports">
+    <form method="POST"> 
+        {{ form.hidden_tag() }} 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="text-danger">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {{ form.title(class_="form-control") }} 
+        <p>
+            {{report_to_update.report_detail}}
+        </p>
+        <ul>
+            {% for subfield in form.type %}
+                <li>{{ subfield() }} {{ subfield.label }}</li>
             {% endfor %}
-        {% endif %}
-    {% endwith %}
-    {{ form.title.label(class_="form-label") }}
-    {{ form.title(class_="form-control") }} 
-    <p>
-        {{report_to_update.report_detail}}
-    </p>
-    <ul>
-        {% for subfield in form.type %}
-            <li>{{ subfield() }} {{ subfield.label }}</li>
-        {% endfor %}
-    </ul>
-    <br>
-    {{ form.status.label(class_="form-label") }}
-    {{ form.status(class_="form-control") }}
-    <br>
-    {{ form.priority.label(class_="form-label") }}
-    {{ form.priority(class_="form-control") }}
-    <br>
-    {{ form.note.label(class_="form-label") }}
-    {{ form.note(class_="form-control") }}
-    <br>
+        </ul>
+        <br>
+        {{ form.status.label(class_="form-label") }}
+        {{ form.status(class_="form-control") }}
+        <br>
+        {{ form.priority.label(class_="form-label") }}
+        {{ form.priority(class_="form-control") }}
+        <br>
+</div>
+    <p>Add a note</p>
+    {{ form.note(class_="form-control, note-textarea") }}
     {% if report_to_update.notes %}
             {% for note in report_to_update.notes|reverse %}
             <div class="notes">

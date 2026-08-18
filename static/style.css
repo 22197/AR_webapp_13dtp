@@ -1,5 +1,7 @@
 html, body {
     font-family: "Victor Mono", monospace;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 /* Text */
@@ -119,6 +121,14 @@ body{
     align-items: stretch;
 }
 
+.centre1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    margin-bottom: 5%;
+}
+
 /* report.html */
 .report-textbox {
     width: 100%;
@@ -139,7 +149,7 @@ body{
     align-items: center;
     gap: 1rem;
     border: 3px solid #9CD5FF;
-    background-color: whitesmoke;
+    background-color: white;
     border-radius: 0.8rem;
     margin-bottom: 1rem;
     padding: 0.15rem 1.5rem;
@@ -164,9 +174,16 @@ body{
     gap: 1rem;
     border: 3px solid #9CD5FF;
     padding: 0.15rem;
-    background-color: whitesmoke;
-    border-radius: 5%;
+    background-color: white;
+    border-radius: 0.8rem;
     margin-bottom: 1rem;
+}
+
+.note-textarea {
+    width: 100%;
+    max-width: 500px;
+    height: 150px;
+    resize: none;
 }
 
 

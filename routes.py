@@ -385,7 +385,7 @@ def edit(report_id):
         # return redirect(url_for('edit', report_id=report_id))
         except Exception:
             db.session.rollback()
-            flash("Something Went Wrong!... please try again")
+            flash("Something Went Wrong! Please try again...")
             return render_template(
                 "edit_report.html", form=form, report_to_update=report_to_update
             )
