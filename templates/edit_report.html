@@ -26,6 +26,8 @@
         {{ form.priority.label(class_="form-label") }}
         {{ form.priority(class_="form-control") }}
         <br>
+        <p>Report was submit on {{ report_to_update.report_time }}</p>
+        <br>
         <p>Add a note</p>
         {{ form.note(class_="form-control, note-textarea") }}
         <br>

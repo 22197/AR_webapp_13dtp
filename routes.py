@@ -394,7 +394,9 @@ def edit(report_id):
                 "edit_report.html", form=form, report_to_update=report_to_update
             )
     return render_template(
-        "edit_report.html", form=form, report_to_update=report_to_update
+        "edit_report.html",
+        form=form,
+        report_to_update=report_to_update,
     )
 
 
