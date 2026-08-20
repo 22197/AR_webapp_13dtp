@@ -2,12 +2,11 @@
 # imports
 
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # Datetime
 from datetime import datetime
+
+from dotenv import load_dotenv
 
 # Flask
 from flask import Flask, flash, redirect, render_template, request, url_for
@@ -50,6 +49,8 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+
+load_dotenv()
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") 
 
 db = SQLAlchemy(app)

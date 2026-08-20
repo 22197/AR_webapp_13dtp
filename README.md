@@ -18,13 +18,14 @@
 
 6. Redirected to login page. 
     Login with new account made
-    
+
 7. Log out
 
 
 ## Test Account
 
 Username: test_teacher
-Password: Teacher
+Password: Teacher_123
+Teacher code: MRT
 
 This account is authorised to create new user accounts.

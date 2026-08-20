@@ -38,6 +38,21 @@ form textarea {
 
 }
 
+.words {
+    display: grid;
+    align-items: center;
+    gap: 1rem;
+    border: 3px solid #9CD5FF;
+    background-color: white;
+    border-radius: 0.8rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.15rem 1.5rem;
+    overflow-wrap: break-word;
+    line-height:2.5rem;
+}
+
+
 /* Header */
 .logo {
     width: auto; 
@@ -151,6 +166,7 @@ body{
     border: 3px solid #9CD5FF;
     background-color: white;
     border-radius: 0.8rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 0.15rem 1.5rem;
     overflow-wrap: break-word;
@@ -172,11 +188,19 @@ body{
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    min-width: 0;
     border: 3px solid #9CD5FF;
     padding: 0.15rem;
     background-color: white;
     border-radius: 0.8rem;
     margin-bottom: 1rem;
+    
+}
+
+.notes p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .note-textarea {
@@ -200,12 +224,14 @@ form li {
 }
 
 .form_button {
-    background-color: #F7F8F0;
-    padding: 5px 10px;
+    background-color: white;
+    padding: 10px 18px;
     border-radius: 2.5px;
     text-decoration: none;
     color: #355872;
     border: 1px solid #9CD5FF;
+    font-size: 1rem;
+    min-width: 110px;
 }
 
 .form_button:hover {

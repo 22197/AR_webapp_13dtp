@@ -29,10 +29,13 @@
         <p>Report was submit on {{ report_to_update.report_time }}</p>
         <br>
         <p>Add a note</p>
-        {{ form.note(class_="form-control, note-textarea") }}
+        {{ form.note(class_="form-control note-textarea") }}
         <br>
-        {{ form.update(class_="btn btn-primary") }}
+        {{ form.update(class_="form_button") }}
+</form>
 </div>
+
+
     <p>Notes: </p>
     {% if report_to_update.notes %}
             {% for note in report_to_update.notes|reverse %}
@@ -43,8 +46,5 @@
     {% else %}
         <p>No notes yet.</p>
     {% endif %}
-    <br>
-    {{ form.update(class_="btn btn-primary") }}
-</form>
 
 {% endblock%}
