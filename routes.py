@@ -1,5 +1,11 @@
 """Anonymous Report School - routes & code, Riki Smillie, 19/03/2026"""
 # imports
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Datetime
 from datetime import datetime
 
@@ -44,7 +50,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-app.config["SECRET_KEY"] = "really super secret key!"  # make sure to remove
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") 
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
