@@ -49,7 +49,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
+# make secret key
 load_dotenv()
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") 
 
@@ -124,10 +124,12 @@ class Notes(db.Model):
     __tablename__ = "Notes"
     note_id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.String, nullable=False)
+    # report relationship
     report_id = db.Column(
         db.Integer, db.ForeignKey("Reports.report_id"), nullable=False
     )
     report = db.relationship("Reports", backref="notes")
+    # user relationship
     user_id = db.Column(
         db.Integer, db.ForeignKey("User.user_id"), nullable=False
     )
@@ -141,6 +143,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String, nullable=False )
     teacher_code = db.Column(db.String, nullable=False, unique=True)
 
+    # use database user_id as login id
     def get_id(self):
         return str(self.user_id)
 
@@ -188,11 +191,18 @@ class ReportForm(FlaskForm):
 
 # Edit form
 class EditForm(FlaskForm):
-    title = StringField("title")
+    title = StringField("title", validators=[
+        DataRequired(message="A title is required"),
+        Length(
+            min=5, max=50, message="The title must be between 5 and 50 characters"
+            ),
+    ])
     status = SelectField("status", choices=[])
     type = MultiCheckboxField("type", choices=[])
     priority = SelectField("priority", choices=[])
-    note = TextAreaField("note", validators=[])
+    note = TextAreaField("note", validators=[
+        Length(max=500, message="Your note is too long.")
+    ])
     update = SubmitField("Update")
 
 
@@ -247,6 +257,7 @@ class SignupForm(FlaskForm):
     )
     submit = SubmitField("Sign Up")
 
+    
     def validate_user_name(self, user_name):
         existing_user_name = User.query.filter_by(
             user_name=user_name.data).first()

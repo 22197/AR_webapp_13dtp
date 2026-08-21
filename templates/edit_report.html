@@ -12,7 +12,8 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        {{ form.title(class_="form-control") }} {# show form title and is editable #}
+        {# Show title of report and edit#}
+            {{ form.title(class_="form-control, title-field") }}
         <p>
             {{report_to_update.report_detail}} {# show form details #}
         </p>
