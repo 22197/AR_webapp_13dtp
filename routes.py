@@ -257,18 +257,21 @@ class SignupForm(FlaskForm):
     )
     submit = SubmitField("Sign Up")
 
-    
+    # make validator
     def validate_user_name(self, user_name):
+        '''Check if the username already exists in the database'''
         existing_user_name = User.query.filter_by(
-            user_name=user_name.data).first()
-        if existing_user_name:
+            user_name=user_name.data).first() # query for entered username
+        if existing_user_name: # if the username exists in db
             raise ValidationError(
                 "This username already exists. Please choose another one."
             )
+        
     def validate_teacher_code(self, teacher_code):
+        '''Check if the username already exists in the database'''
         existing_code = User.query.filter_by(
-            teacher_code=teacher_code.data).first()
-        if existing_code:
+            teacher_code=teacher_code.data).first() # query for entered teacher code
+        if existing_code: # if the teacehr code exists in db
             raise ValidationError(
                 "This Teacher Code already exists. Please choose another one."
             )
@@ -282,23 +285,26 @@ class SignupForm(FlaskForm):
 # route report.html
 @app.route("/", methods=["GET", "POST"])
 def report():
-    title = None
-    report = None
+    '''route for the report page - able to write in form to submit to database'''
+    # Define form
     form = ReportForm()
     # Check boxes
-    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
+    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()] # query all type from type tabel
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
-        form.title.data = ""  # reset for the next times
+        form.title.data = ""  # reset for the next time
 
-        report = form.report.data
+        report = form.report.data 
         form.report.data = ""
 
-        report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        #report time when form was submit
+        report_time = datetime.now().strftime("%Y-%m-%d %H:%M") # make report_time show only date, hour and minutes
 
+        # set status id to 3 so initially "NOT checked"
         status_id = 3
 
+        # set priority id to 6 so initially "Not set"
         priority_id = 6
 
         new_report = Reports(
@@ -309,31 +315,27 @@ def report():
             priority_id=priority_id
         )
 
-        #####
-        types = form.type.data
-        # Loop through each selected type ID string
+        # selected types are added to new_report
+        types = form.type.data # 
         for type_id_str in types:
-            # Convert string ID to int and fetch Type object from db
             type_obj = Type.query.get(int(type_id_str))
-            # Check if the Type object was found
             if type_obj:
-                # Add the Type object to the report's many-to-many relationship
                 new_report.types.append(type_obj)
 
-        form.type.data = ""
+        form.type.data = "" #reset for next time
 
-        db.session.add(new_report)
-        db.session.commit()
-        return render_template("report.html", title=title, form=form)
+        db.session.add(new_report) # add to db session
+        db.session.commit() # commit to db
+        return render_template("report.html", title=title, form=form) #also return title to say report was submit
     else:
         return render_template("report.html", form=form)
-    # write render error messages
-
 
 @app.route("/view", methods=["GET"])
-@login_required
+@login_required # only be accessed if the user is logged in
 def view():
-    sort = request.args.get("sort", "original")
+    '''route for viewing all the reports - links to specific pages for each report '''
+    sort = request.args.get("sort", "original") # check how the user wants to sort
+    # query for reports based on how the user wants to sort
     if sort == "status":
         reports = Reports.query.join(Status).order_by(Status.status.asc()).all()
     elif sort == "type":
@@ -342,7 +344,8 @@ def view():
         reports = Reports.query.join(Priority).order_by(Priority.priority.asc()).all()
     else:
         reports = Reports.query.order_by(Reports.report_id.asc()).all()
-        
+
+    # query for the content in status types and priority
     status = Status.query.all()
     types = Type.query.all()
     priority = Priority.query.all()
@@ -352,18 +355,24 @@ def view():
 
 
 @app.route("/edit/<int:report_id>", methods=["GET", "POST"])
-@login_required
+@login_required # only be accessed if the user is logged in
 def edit(report_id):
+    '''edit page to fix, edit reports'''
+    # define form
     form = EditForm()
+
+    # query for the report (404 if the report doesn't exist)
     report_to_update = Reports.query.get_or_404(report_id)
+    # query everything from type, status and priority (id and name)
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
     form.status.choices = [(str(s.status_id), s.status) for s in Status.query.all()]
     form.priority.choices = [(str(p.priority_id), p.priority) for p in Priority.query.all()]
 
+    # when page is opened, fill form with what already exists
     if request.method == "GET":
         form.title.data = report_to_update.report_title
 
-        form.note.data = ""
+        form.note.data = "" # note is blank, want a new form to be written each time.
 
         form.status.data = str(report_to_update.status_id)
 
@@ -371,6 +380,7 @@ def edit(report_id):
 
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
+    # when form is submit/updated, 
     if form.validate_on_submit():
         report_to_update.report_title = form.title.data
         report_to_update.status_id = int(form.status.data)
@@ -382,32 +392,29 @@ def edit(report_id):
             if Type.query.get(type_id)
         ]
 
+        # if a note was written, add to db session
         if form.note.data:
-            note_text = form.note.data
-        else:
-            note_text = ""
-
-        if note_text:
             new_note = Notes(
-                note=note_text, 
+                note=form.note.data, 
                 report_id=report_to_update.report_id,
                 user_id=current_user.user_id
                 )
             db.session.add(new_note)
 
+        # try commit to db 
         try:
             db.session.add(report_to_update)
             db.session.commit()
-            flash("The Report Was Successfully updated!")
-            form.note.data = ""
-            report_to_update = Reports.query.get_or_404(report_id)
+            # commit to db
+            flash("The Report Was Successfully updated!") # tell user that it was submitted
+            form.note.data = "" # clear note field for next time
             return render_template(
                 "edit_report.html", form=form, report_to_update=report_to_update
             )
-        # return redirect(url_for('edit', report_id=report_id))
+        # if commit to db doesn't work, 
         except Exception:
-            db.session.rollback()
-            flash("Something Went Wrong! Please try again...")
+            db.session.rollback() # take db session back
+            flash("Something Went Wrong! Please try again...") # tell user it didn't work
             return render_template(
                 "edit_report.html", form=form, report_to_update=report_to_update
             )
@@ -419,48 +426,56 @@ def edit(report_id):
 
 
 @app.route("/signup", methods=["GET", "POST"])
-@login_required
+@login_required # only be accessed if the user is logged in
 def signup():
-    form = SignupForm()
+    '''Sign up page for users to make accounts'''
+    form = SignupForm() # define form
     if form.validate_on_submit():
-        hash_password = bcrypt.generate_password_hash(form.password.data)
+
+        hash_password = bcrypt.generate_password_hash(form.password.data) # hash password
+
         new_user = User(user_name=form.user_name.data,
                         teacher_code=form.teacher_code.data,
                         password=hash_password)
+        
         db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("login"))
+        db.session.commit() # commit to db
+        return redirect(url_for("login")) # take user to login page so they can login with new account
     return render_template("sign_up.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    form = LoginForm()
+    '''Login page for user'''
+    form = LoginForm() # define from
+
     if form.validate_on_submit():
-        user = User.query.filter_by(user_name=form.user_name.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            return redirect(url_for("view"))
-        flash("Your username or password is wrong!!", "danger")
+        user = User.query.filter_by(user_name=form.user_name.data).first() # query for usename
+
+        if user and bcrypt.check_password_hash(user.password, form.password.data): # check if username and hashed password match
+            login_user(user) # login
+            return redirect(url_for("view")) # take to view page
+        flash("Your username or password is wrong!!", "danger") # tell user that they made a mistake
     return render_template("login.html", form=form)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
+    '''logout the user'''
     logout_user()
     return redirect(url_for("report"))
 
 
 @app.route("/about")
 def about():
+    '''take to logout page'''
     return render_template("about.html")
 
 
 @app.errorhandler(404)
 def page_not_found(e):
+    '''404 error'''
     return render_template('404.html'), 404
-
-# _______________________________________________________________________
 
 
 if __name__ == "__main__":
