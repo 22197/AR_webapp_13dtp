@@ -293,10 +293,7 @@ def report():
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
-        form.title.data = ""  # reset for the next time
-
-        report = form.report.data 
-        form.report.data = ""
+        report = form.report.data
 
         #report time when form was submit
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M") # make report_time show only date, hour and minutes
@@ -324,9 +321,18 @@ def report():
 
         form.type.data = "" #reset for next time
 
-        db.session.add(new_report) # add to db session
-        db.session.commit() # commit to db
-        return render_template("report.html", title=title, form=form) #also return title to say report was submit
+        try:
+            db.session.add(new_report) # add to db session
+            db.session.commit() # commit to db
+
+            form.title.data = ""  # reset for the next time 
+            form.report.data = ""
+            
+            return render_template("report.html", title=title, form=form) #also return title to say report was submit
+        except Exception:
+            db.session.rollback() # take db session back
+            flash("Something Went Wrong! Please try again...") # tell user it didn't work
+            return render_template("report.html", form=form)
     else:
         return render_template("report.html", form=form)
 
