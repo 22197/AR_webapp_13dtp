@@ -178,7 +178,9 @@ body{
 
 .right_info {
     margin-right: 1rem;
-    line-height: 0.25rem;
+    line-height: 1.4rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .sorting {
