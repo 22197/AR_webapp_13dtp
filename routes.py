@@ -293,7 +293,7 @@ def report():
     # Check boxes
     # query all type from type tabel and make list of tuples
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()] 
-    
+
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
@@ -398,11 +398,11 @@ def edit(report_id):
         #type
         selected_type_ids = [int(type_id) for type_id in form.type.data] # make list of type id selected
 
-        report_to_update.type = []
+        report_to_update.types = []
         for type_id in selected_type_ids: 
             type = Type.query.get(type_id)
             if type:
-                report_to_update.type.append(type) # add type to report_to_update
+                report_to_update.types.append(type) # add type to report_to_update
 
         # if a note was written, add to db session
         if form.note.data:
