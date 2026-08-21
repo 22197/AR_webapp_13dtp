@@ -3,6 +3,7 @@
 <div class="words">
     <div class="centre">
         <u><h1>Sign Up</h1></u>
+        <p class="add_info">You can make an account for someone else.<br>Make sure they are trust worthy in keeping reports secure.</p>
     </div>
     <div class="centre1">
         <form method = "POST" novalidate>
@@ -18,7 +19,7 @@
 
             {# make password #}
             <p>Password</p>
-            <p class="add_info">password miust be between 8 and 30 characters</p>
+            <p class="add_info">password must be between 8 and 30 characters</p>
             {{ form.password(class_ = "form-control report-textbox") }}<br>
             {% for error in form.password.errors %}
                 <div class="text-danger">{{ error }}</div>

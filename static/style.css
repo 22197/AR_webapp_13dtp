@@ -131,9 +131,10 @@ body{
 
 .centre {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
 }
 
 .centre1 {
