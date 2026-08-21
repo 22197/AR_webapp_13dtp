@@ -313,13 +313,11 @@ def report():
         )
 
         # selected types are added to new_report
-        types = form.type.data # 
-        for type_id_str in types:
-            type_obj = Type.query.get(int(type_id_str))
+        types = form.type.data
+        for type_id_str in types: # loop each type
+            type_obj = Type.query.get(int(type_id_str)) # query for type with the type id
             if type_obj:
-                new_report.types.append(type_obj)
-
-        form.type.data = "" #reset for next time
+                new_report.types.append(type_obj) # add to new report
 
         try:
             db.session.add(new_report) # add to db session
@@ -327,7 +325,8 @@ def report():
 
             form.title.data = ""  # reset for the next time 
             form.report.data = ""
-            
+            form.type.data = []
+
             return render_template("report.html", title=title, form=form) #also return title to say report was submit
         except Exception:
             db.session.rollback() # take db session back

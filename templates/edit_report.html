@@ -17,11 +17,11 @@
         {# Show title of report and edit#}
             {{ form.title(class_="form-control, title-field") }}
         <p>
-            Report Details:<br>
+            <u>Report Details:</u><br>
             {{report_to_update.report_detail}} {# show form details #}
         </p>
         <ul>
-            Category:<br>
+            <u>Category:</u><br>
             {# form type #}
             {% for subfield in form.type %}
                 <li>{{ subfield() }} {{ subfield.label }}</li>
@@ -29,11 +29,11 @@
         </ul>
         <br>
         {# status #}
-        <p>Status:</p>
+        <p><u>Status:</u></p>
         {{ form.status(class_="form-control") }}
         <br>
         {# priority #}
-        <p>Priority:</p>
+        <p><u>Priority:</u></p>
         {{ form.priority(class_="form-control") }}
         <br>
         {# show time report was submit #}
