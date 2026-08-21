@@ -1,9 +1,10 @@
 {%extends "layout.html"%}
 {%block content%}
 {# Edit page #}
-<div class="reports">
+<div class="words">
     <form method="POST"> 
         {{ form.hidden_tag() }} 
+        
         {# show flash #}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -12,12 +13,15 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+
         {# Show title of report and edit#}
             {{ form.title(class_="form-control, title-field") }}
         <p>
+            Report Details:<br>
             {{report_to_update.report_detail}} {# show form details #}
         </p>
         <ul>
+            Category:<br>
             {# form type #}
             {% for subfield in form.type %}
                 <li>{{ subfield() }} {{ subfield.label }}</li>
@@ -25,16 +29,17 @@
         </ul>
         <br>
         {# status #}
-        {{ form.status.label(class_="form-label") }}
+        <p>Status:</p>
         {{ form.status(class_="form-control") }}
         <br>
         {# priority #}
-        {{ form.priority.label(class_="form-label") }}
+        <p>Priority:</p>
         {{ form.priority(class_="form-control") }}
         <br>
         {# show time report was submit #}
         <p>Report was submit on {{ report_to_update.report_time }}</p>
         <br>
+        <hr>
         {# adding notes #}
         <p>Add a note</p>
         {{ form.note(class_="form-control note-textarea") }}
