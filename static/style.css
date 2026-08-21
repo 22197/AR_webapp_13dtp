@@ -24,11 +24,11 @@ form textarea {
 
 .text-danger {
     color: red;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .add_info {
-    font-size: 10px; 
+    font-size: 14px; 
 }
 
 .report_name { /* view.html */

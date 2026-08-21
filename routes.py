@@ -174,7 +174,7 @@ class ReportForm(FlaskForm):
         "reports",
         validators=[
             DataRequired(message="An explanation is required"),
-            Length(min=21, message="A more detailed explanation is required"),
+            Length(min=20, message="A more detailed explanation is required"),
             Length(max=4000, message="Please write a more consise explanation"),
         ],
     )
@@ -291,8 +291,9 @@ def report():
     form = ReportForm()
 
     # Check boxes
-    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()] # query all type from type tabel
-
+    # query all type from type tabel and make list of tuples
+    form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()] 
+    
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
@@ -399,9 +400,9 @@ def edit(report_id):
 
         report_to_update.type = []
         for type_id in selected_type_ids: 
-            rt = Type.query.get(type_id)
-            if rt:
-                report_to_update.type.append(rt) # add type to report_to_update
+            type = Type.query.get(type_id)
+            if type:
+                report_to_update.type.append(type) # add type to report_to_update
 
         # if a note was written, add to db session
         if form.note.data:

@@ -1,32 +1,40 @@
 {%extends "layout.html"%}
 {%block content%}
 <div class="words">
-    <p>You can make an account for another person.</p>
-    <form method = "POST" novalidate>
-        {{ form.hidden_tag() }}
+    <div class="centre">
+        <u><h1>Sign Up</h1></u>
+    </div>
+    <div class="centre1">
+        <form method = "POST" novalidate>
+            {{ form.hidden_tag() }}
 
-        {# make user name #}
-        <p>username</p>
-        {{ form.user_name() }} <br>
-        {% for error in form.user_name.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
+            {# make user name #}
+            <p>Username</p>
+            <p class="add_info">User name must be below 20 characters</p>
+            {{ form.user_name(class_ = "form-control report-textbox") }} <br>
+            {% for error in form.user_name.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
 
-        {# make password #}
-        <p>password</p>
-        {{ form.password() }}<br>
-        {% for error in form.password.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-        {# write teacher code#}
-        <p>teacher code</p>
-        {{ form.teacher_code() }}<br>
-        {% for error in form.teacher_code.errors %}
-            <div class="text-danger">{{ error }}</div>
-        {% endfor %}
+            {# make password #}
+            <p>Password</p>
+            <p class="add_info">password miust be between 8 and 30 characters</p>
+            {{ form.password(class_ = "form-control report-textbox") }}<br>
+            {% for error in form.password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
 
-        {#sign up#}
-        {{ form.submit (class_="form_button")}} 
-    </form>
+            {# write teacher code#}
+            <p>Teacher Code</p>
+            <p class="add_info">Please write your teacher code (3 characters)</p>
+            {{ form.teacher_code(class_ = "form-control report-textbox") }}<br>
+            {% for error in form.teacher_code.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+            <br>
+            {#sign up#}
+            {{ form.submit (class_="form_button")}} 
+        </form>
+    </div>
 </div>
 {% endblock%}

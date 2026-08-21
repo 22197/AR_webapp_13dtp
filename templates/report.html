@@ -1,59 +1,68 @@
 {%extends "layout.html"%}
 {%block content%}
-{# if a report was sent, notify user #}
-{% if title%}
-<div class="centre">
-    <h1> Your report, "{{title}}" has been sent</h1>
-    <a href="http://127.0.0.1:5000/">Write another report</a>
-</div>
-{# if not, show report form #}
-{% else %}
+<div class="words">
+    {# if a report was sent, notify user #}
+    {% if title%}
     <div class="centre">
-        <u><h1>Report</h1></u>
+        <h1> Your report, "{{title}}" has been sent</h1><br>
+        <a href="http://127.0.0.1:5000/">Write another report</a>
     </div>
-    <div class="centre1">
-        <form method = "POST" novalidate>
-            {{ form.hidden_tag() }} 
-            {# show flash incase broken #}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="text-danger">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            {# write title of report #}
-            <p>Title of Report</p>
-            <br>
-            {{ form.title(class_ = "form-control report-textbox", placeholder = "title of report") }}
-            {# if error, show an error message #}
-            {% for error in form.title.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-            <br>
-            {# write report details #}
-            <p>Report</p>
-            <br>
-            {{ form.report(class_ = "form-control report-textarea", placeholder = "Please write details for your report.") }} 
-            {# show error message if necessary #}
-            {% for error in form.report.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-            <br/>
-            <ul>
-                {# options for type #}
-                {% for subfield in form.type %}
-                    <li>{{ subfield() }} {{ subfield.label }}</li>
+    {# if not, show report form #}
+    {% else %}
+        <div class="centre">
+            <u><h1>Report</h1></u>
+        </div>
+        <div class="centre1">
+            <form method = "POST" novalidate>
+                {{ form.hidden_tag() }} 
+                {# show flash incase broken #}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="text-danger">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                {# write title of report #}
+                <p>Title of Report</p>
+                <p class="add_info">Please write a title for your report. (5-50 characters)</p>
+                <br>
+                {{ form.title(class_ = "form-control report-textbox", placeholder = "title of report") }}
+                {# if error, show an error message #}
+                {% for error in form.title.errors %}
+                    <div class="text-danger">{{ error }}</div>
                 {% endfor %}
-            </ul>
-            {# error message if necessary #}
-            {% for error in form.type.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-            <br/>
-            {# submit button #}
-            {{ form.submit(class_ = "form_button") }}
-        </form>
-    </div>
+                <br>
+                {# write report details #}
+                <p>Report</p>
+                <p class="add_info">Please write an explanation for your report (20-4000 character)</p>
+                <br>
+                {{ form.report(class_ = "form-control report-textarea", placeholder = "Please write details for your report.") }} 
+                {# show error message if necessary #}
+                {% for error in form.report.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+                <br/>
+
+                <p class="add_info">Please select categories for your report</p>
+                <ul>
+                    {# options for type #}
+                    {% for subfield in form.type %}
+                        <li>{{ subfield() }} {{ subfield.label }}</li>
+                    {% endfor %}
+                </ul>
+                {# error message if necessary #}
+                {% for error in form.type.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+                <br/>
+                {# submit button #}
+                {{ form.submit(class_ = "form_button") }}
+            </form>
+        </div>
+</div>
+
+
 {% endif %}
 {%endblock%}
