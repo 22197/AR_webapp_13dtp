@@ -29,8 +29,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 # FlaskForms
 from flask_wtf import FlaskForm
-from sqlalchemy import ForeignKey, Integer, String, select
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from wtforms import (
     PasswordField,
     SelectField,
@@ -66,10 +64,6 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-# Create the database tables
-with app.app_context():
-    db.create_all()
-
 # ______________________________________________________________________
 # Create db model
 # bridging table Report_Type (define before Reports class)
@@ -78,7 +72,9 @@ Report_Type = db.Table(
     db.Column(
         "report_id", db.Integer, db.ForeignKey("Reports.report_id"), primary_key=True
     ),
-    db.Column("type_id", db.Integer, db.ForeignKey("Type.type_id"), primary_key=True),
+    db.Column(
+        "type_id", db.Integer, db.ForeignKey("Type.type_id"), primary_key=True
+        ),
 )
 
 
@@ -147,11 +143,16 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.user_id)
 
+# Create the database tables if not existing
+with app.app_context():
+    db.create_all()
+
+
 
 # FORMS
-# Check Boxes
+# Check Boxes for types
 class MultiCheckboxField(SelectMultipleField):
-    # render the field as a list of checkboxes
+    '''make a list of checkboxes '''
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
@@ -288,8 +289,10 @@ def report():
     '''route for the report page - able to write in form to submit to database'''
     # Define form
     form = ReportForm()
+
     # Check boxes
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()] # query all type from type tabel
+
     # validate form
     if form.validate_on_submit():
         title = form.title.data  # if form is filled, assign name
@@ -385,17 +388,20 @@ def edit(report_id):
 
         form.type.data = [str(t.type_id) for t in report_to_update.types]
 
-    # when form is submit/updated, 
+    # add form content to report_to_update
     if form.validate_on_submit():
+        # report details can't be updated
         report_to_update.report_title = form.title.data
         report_to_update.status_id = int(form.status.data)
         report_to_update.priority_id = int(form.priority.data)
-        selected_type_ids = [int(type_id) for type_id in form.type.data]
-        report_to_update.types = [
-            Type.query.get(type_id)
-            for type_id in selected_type_ids
-            if Type.query.get(type_id)
-        ]
+        #type
+        selected_type_ids = [int(type_id) for type_id in form.type.data] # make list of type id selected
+
+        report_to_update.type = []
+        for type_id in selected_type_ids: 
+            rt = Type.query.get(type_id)
+            if rt:
+                report_to_update.type.append(rt) # add type to report_to_update
 
         # if a note was written, add to db session
         if form.note.data:
