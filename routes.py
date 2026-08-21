@@ -213,7 +213,7 @@ class LoginForm(FlaskForm):
         ],
         )   
     # Submit
-    submit = SubmitField("Submit")  
+    submit = SubmitField("Log In")  
 
 
 # sign up form
@@ -245,7 +245,7 @@ class SignupForm(FlaskForm):
             Length(min=3, max=3, message="The teacher code must be exactly 3 characters long."),
         ],
     )
-    submit = SubmitField("Submit")
+    submit = SubmitField("Sign Up")
 
     def validate_user_name(self, user_name):
         existing_user_name = User.query.filter_by(

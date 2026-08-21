@@ -1,22 +1,37 @@
 {%extends "layout.html"%}
 {%block content%}
-<form method="POST" novalidate>
-    {{ form.hidden_tag() }}
-    {{ form.user_name() }}<br>
-    {% for error in form.user_name.errors %}
-        <div class="text-danger">{{ error }}</div>
-    {% endfor %}
-    {{ form.password() }}
-    {% for error in form.password.errors %}<br>
-        <div class="text-danger">{{ error }}</div>
-    {% endfor %}
-    {{ form.submit }} <br>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="text-danger">{{ message }}</div>
+<div class="words">
+    <div class="centre">
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            {# user name#}
+            <p>User Name</p>
+            {{ form.user_name() }}<br>
+            {% for error in form.user_name.errors %}
+                <div class="text-danger">{{ error }}</div>
             {% endfor %}
-        {% endif %}
-    {% endwith %}
-</form>
+
+            {# password#}
+            <p>Password</p>
+            {{ form.password() }} <br>
+            {% for error in form.password.errors %}<br>
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+
+            {# login button#}
+            {{ form.submit (class_="form_button")}} <br>
+            
+            {# error message#}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="text-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </form>
+    </div>
+</div>
+
 {% endblock%}

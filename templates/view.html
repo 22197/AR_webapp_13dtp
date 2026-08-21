@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+{# drop down for sorting #}
 <div class="block">
     <h1>Reports</h1>
     <div class="sorting">
@@ -14,11 +15,13 @@
         </form>
     </div>
     
-
+    {# for each report #}
     {% for report in reports %}
         <div class="reports">
+            {# showing title which is link to specific edit page #}
             <a href="http://127.0.0.1:5000/edit/{{ report.report_id }}" class="report_name">{{ report.report_title }}</a>
             <div class="right_info">
+                {# showing status #}
                 <p>
                 <u>Status:</u>
                 {% if report.status %}

@@ -1,8 +1,10 @@
 {%extends "layout.html"%}
 {%block content%}
+{# Edit page #}
 <div class="reports">
     <form method="POST"> 
         {{ form.hidden_tag() }} 
+        {# show flash when updated #}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -10,37 +12,42 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        {{ form.title(class_="form-control") }} 
+        {{ form.title(class_="form-control") }} {# show form title and is editable #}
         <p>
-            {{report_to_update.report_detail}}
+            {{report_to_update.report_detail}} {# show form details #}
         </p>
         <ul>
+            {# form type #}
             {% for subfield in form.type %}
                 <li>{{ subfield() }} {{ subfield.label }}</li>
             {% endfor %}
         </ul>
         <br>
+        {# status #}
         {{ form.status.label(class_="form-label") }}
         {{ form.status(class_="form-control") }}
         <br>
+        {# priority #}
         {{ form.priority.label(class_="form-label") }}
         {{ form.priority(class_="form-control") }}
         <br>
+        {# show time report was submit #}
         <p>Report was submit on {{ report_to_update.report_time }}</p>
         <br>
+        {# adding notes #}
         <p>Add a note</p>
         {{ form.note(class_="form-control note-textarea") }}
         <br>
+        {# submit #}
         {{ form.update(class_="form_button") }}
 </form>
 </div>
-
-
+{# Show every note related to this report #}
     <p>Notes: </p>
     {% if report_to_update.notes %}
             {% for note in report_to_update.notes|reverse %}
             <div class="notes">
-                <p>{{ note.user.teacher_code}} - {{ note.note }}</p>
+                <p>{{ note.user.teacher_code}} - {{ note.note }}</p> {# show teacher code of who worte note. Then note. #}
             </div>
             {% endfor %}
     {% else %}
