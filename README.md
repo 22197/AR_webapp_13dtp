@@ -8,7 +8,7 @@
 
 2. Open about page on 'About This Website'
 
-3. Login with link in footer
+3. Login by clicking on button in header
     Login with test account shown below. 
 
 4. Look through reports on 'Reports'

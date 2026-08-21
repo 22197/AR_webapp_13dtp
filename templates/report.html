@@ -27,7 +27,6 @@
                 {# write title of report #}
                 <p>Title of Report</p>
                 <p class="add_info">Please write a title for your report. (5-50 characters)</p>
-                <br>
                 {{ form.title(class_ = "form-control report-textbox", placeholder = "title of report") }}
                 {# if error, show an error message #}
                 {% for error in form.title.errors %}
@@ -37,7 +36,6 @@
                 {# write report details #}
                 <p>Report</p>
                 <p class="add_info">Please write an explanation for your report (20-4000 character)</p>
-                <br>
                 {{ form.report(class_ = "form-control report-textarea", placeholder = "Please write details for your report.") }} 
                 {# show error message if necessary #}
                 {% for error in form.report.errors %}
