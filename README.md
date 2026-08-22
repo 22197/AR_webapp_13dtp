@@ -9,7 +9,7 @@
 2. Open about page on 'About This Website'
 
 3. Login by clicking on button in header
-    Login with test account shown below. 
+    Login with test admin account shown below. 
 
 4. Look through reports on 'Reports'
     Sort reports with drop down
@@ -17,7 +17,7 @@
 5. Make an account on 'Sign up'
 
 6. Redirected to login page. 
-    Login with new account made
+    Login with new account made --> can't create account since it is not an admin account
 
 7. Log out
 

@@ -9,7 +9,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 # Flask
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, abort, flash, redirect, render_template, request, url_for
 
 # hash
 from flask_bcrypt import Bcrypt
@@ -131,13 +131,14 @@ class Notes(db.Model):
     )
     user = db.relationship("User", backref="notes")
 
-#user tabler
+#user table
 class User(UserMixin, db.Model):
     __tablename__ = "User"
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False )
     teacher_code = db.Column(db.String, nullable=False, unique=True)
+    admin = db.Column(db.Integer, nullable=False, default=0)
 
     # use database user_id as login id
     def get_id(self):
@@ -440,7 +441,10 @@ def edit(report_id):
 @app.route("/signup", methods=["GET", "POST"])
 @login_required # only be accessed if the user is logged in
 def signup():
-    '''Sign up page for users to make accounts'''
+    '''Sign up page for admin users to make accounts'''
+    if current_user.admin != 1: # if not admin, abort 404
+        abort(404)
+    
     form = SignupForm() # define form
     if form.validate_on_submit():
 
@@ -454,6 +458,7 @@ def signup():
         db.session.commit() # commit to db
         return redirect(url_for("login")) # take user to login page so they can login with new account
     return render_template("sign_up.html", form=form)
+
 
 
 @app.route("/login", methods=["GET", "POST"])
