@@ -2,7 +2,7 @@
 {%block content%}
 {# Edit page #}
 <div class="words">
-    <form method="POST"> 
+    <form method="POST" novalidate> 
         {{ form.hidden_tag() }} 
         
         {# show flash #}
@@ -16,6 +16,9 @@
 
         {# Show title of report and edit#}
             {{ form.title(class_="form-control title-field") }}
+            {% for error in form.title.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
         <p>
             <u>Report Details:</u><br>
             {{report_to_update.report_detail}} {# show form details #}
@@ -25,6 +28,9 @@
             {# form type #}
             {% for subfield in form.type %}
                 <li>{{ subfield() }} {{ subfield.label }}</li>
+            {% endfor %}
+            {% for error in form.type.errors %}
+                <div class="text-danger">{{ error }}</div>
             {% endfor %}
         </ul>
         <br>
@@ -43,6 +49,9 @@
         {# adding notes #}
         <p>Add a note</p>
         {{ form.note(class_="form-control note-textarea") }}
+        {% for error in form.note.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
         <br>
         {# submit #}
         {{ form.update(class_="form_button") }}

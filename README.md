@@ -24,8 +24,8 @@
 
 ## Test Account
 
-Username: test_teacher
-Password: Teacher_123
-Teacher code: MRT
+Username: Admin_teacher
+Password: password
+Teacher code: ADM
 
 This account is authorised to create new user accounts.

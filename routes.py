@@ -200,7 +200,12 @@ class EditForm(FlaskForm):
             ),
     ])
     status = SelectField("status", choices=[])
-    type = MultiCheckboxField("type", choices=[])
+    type = MultiCheckboxField("type",
+        choices=[],
+        validators=[
+            DataRequired(message="Please select a category"),
+        ],
+        )
     priority = SelectField("priority", choices=[])
     note = TextAreaField("note", validators=[
         Length(max=500, message="Your note is too long.")
