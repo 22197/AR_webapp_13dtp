@@ -55,12 +55,12 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 #login 
-login_manager = LoginManager()
+login_manager = LoginManager() # login manager to handle login sessions
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "login" # take user to login page for @Loginrequired if not logged in.
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id): # use user_id from db as user's id
     return User.query.get(user_id)
 
 

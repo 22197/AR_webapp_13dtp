@@ -188,6 +188,12 @@ body{
     margin-bottom: 1rem;
 }
 
+.sorting select {
+    border: 2px solid #9CD5FF;
+    border-radius: 5px;
+    font: inherit;
+}
+
 /* edit.html*/
 
 .notes {
