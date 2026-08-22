@@ -60,7 +60,7 @@ login_manager.init_app(app)
 login_manager.login_view = "login" # take user to login page for @Loginrequired if not logged in.
 
 @login_manager.user_loader
-def load_user(user_id): # use user_id from db as user's id
+def load_user(user_id): # look for user based on user_id
     return User.query.get(user_id)
 
 
@@ -309,7 +309,7 @@ def report():
         report_time = datetime.now().strftime("%Y-%m-%d %H:%M") # make report_time show only date, hour and minutes
 
         # set status id to 3 so initially "NOT checked"
-        status_id = 3
+        status_id = 4
 
         # set priority id to 6 so initially "Not set"
         priority_id = 6
@@ -352,13 +352,13 @@ def view():
     sort = request.args.get("sort", "original") # check how the user wants to sort
     # query for reports based on how the user wants to sort
     if sort == "status":
-        reports = Reports.query.join(Status).order_by(Status.status.asc()).all()
+        reports = Reports.query.join(Status).order_by(Status.status_id.desc()).all()
     elif sort == "type":
         reports = Reports.query.join(Reports.types).order_by(Type.type.asc()).all()
     elif sort == "priority":
-        reports = Reports.query.join(Priority).order_by(Priority.priority.asc()).all()
+        reports = Reports.query.join(Priority).order_by(Priority.priority_id.desc()).all()
     else:
-        reports = Reports.query.order_by(Reports.report_id.asc()).all()
+        reports = Reports.query.order_by(Reports.report_id.desc()).all()
 
     # query for the content in status types and priority
     status = Status.query.all()
