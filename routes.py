@@ -4,12 +4,20 @@
 import os
 
 # Datetime
-from datetime import datetime
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 
 # Flask
-from flask import Flask, abort, flash, redirect, render_template, request, url_for
+from flask import (
+    Flask,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 
 # hash
 from flask_bcrypt import Bcrypt
@@ -26,6 +34,7 @@ from flask_login import (
 
 # SQL alchemy
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import SQLAlchemyError
 
 # FlaskForms
 from flask_wtf import FlaskForm
@@ -49,7 +58,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # make secret key
 load_dotenv()
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") 
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -85,6 +94,7 @@ Report_Type = db.Table(
 
 # reports table
 class Reports(db.Model):
+    '''DB model of Reports Table'''
     __tablename__ = "Reports"
     report_id = db.Column(db.Integer, primary_key=True)
     report_title = db.Column(db.String, nullable=False)
@@ -110,6 +120,7 @@ class Reports(db.Model):
 
 # status table (keep if needed elsewhere)
 class Status(db.Model):
+    '''DB model of Status Table'''
     __tablename__ = "Status"
     status_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String, nullable=False)
@@ -117,6 +128,7 @@ class Status(db.Model):
 
 # priority table
 class Priority(db.Model):
+    '''DB model of Priority Table'''
     __tablename__ = "Priority"
     priority_id = db.Column(db.Integer, primary_key=True)
     priority = db.Column(db.String, nullable=False)
@@ -124,6 +136,7 @@ class Priority(db.Model):
 
 # type table
 class Type(db.Model):
+    '''DB model of Type Table'''
     __tablename__ = "Type"
     type_id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String, nullable=False)
@@ -131,6 +144,7 @@ class Type(db.Model):
 
 # note table
 class Notes(db.Model):
+    '''DB model of Notes Table'''
     __tablename__ = "Notes"
     note_id = db.Column(db.Integer, primary_key=True)
     note = db.Column(db.String, nullable=False)
@@ -148,6 +162,7 @@ class Notes(db.Model):
 
 # user table
 class User(UserMixin, db.Model):
+    '''DB model of User Table'''
     __tablename__ = "User"
     user_id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
@@ -175,6 +190,7 @@ class MultiCheckboxField(SelectMultipleField):
 
 # Report Form
 class ReportForm(FlaskForm):
+    '''Form on the Report page'''
     # Title
     title = StringField(
         "title",
@@ -212,6 +228,7 @@ class ReportForm(FlaskForm):
 
 # Edit form
 class EditForm(FlaskForm):
+    '''Form to Edit database (Edit page)'''
     title = StringField("title", validators=[
         DataRequired(message="A title is required"),
         Length(
@@ -237,6 +254,7 @@ class EditForm(FlaskForm):
 
 # Login form
 class LoginForm(FlaskForm):
+    '''Form to Enter login details'''
     user_name = StringField(
         "user_name",
         validators=[
@@ -257,6 +275,7 @@ class LoginForm(FlaskForm):
 
 # sign up form
 class SignupForm(FlaskForm):
+    '''Form to enter login details when signing up'''
     user_name = StringField(
         "user_name",
         validators=[
@@ -305,7 +324,7 @@ class SignupForm(FlaskForm):
             )
 
     def validate_teacher_code(self, teacher_code):
-        '''Check if the username already exists in the database'''
+        '''Check if the teacher_code already exists in the database'''
         existing_code = User.query.filter_by(
             # query for entered teacher code
             teacher_code=teacher_code.data).first()
@@ -336,10 +355,10 @@ def report():
         report = form.report.data
 
         # report time when form was submit
-        report_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+        report_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
         # make report_time show only date, hour and minutes
 
-        # set status id to 3 so initially "NOT checked"
+        # set status id to 4 so initially "NOT checked"
         status_id = 4
 
         # set priority id to 6 so initially "Not set"
@@ -371,7 +390,7 @@ def report():
 
             return render_template("report.html", title=title, form=form)
             # also return title to say report was submit
-        except Exception:
+        except SQLAlchemyError:
             db.session.rollback()  # take db session back
             flash("Something Went Wrong! Please try again...")
             # tell user it didn't work
@@ -496,7 +515,7 @@ def edit(report_id):
                 report_to_update=report_to_update
             )
         # if commit to db doesn't work,
-        except Exception:
+        except SQLAlchemyError:
             db.session.rollback()  # take db session back
             flash("Something Went Wrong! Please try again...")
             # tell user it didn't work
@@ -567,7 +586,7 @@ def logout():
 
 @app.route("/about")
 def about():
-    '''take to logout page'''
+    '''take to about page'''
     return render_template("about.html")
 
 
@@ -584,4 +603,4 @@ def server_error(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

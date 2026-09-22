@@ -6,7 +6,7 @@
     </div>
     {% if current_user.is_authenticated %}
         <div class="nav-right">
-            <a href="{{ url_for('edit')}}" class="h_link">All Reports</a>
+            <a href="{{ url_for('view')}}" class="h_link">All Reports</a>
 
             {% if current_user.admin == 1 %}
             <a href="{{ url_for('signup')}}" class="h_link">Sign up</a>
