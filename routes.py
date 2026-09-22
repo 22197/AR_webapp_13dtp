@@ -2,13 +2,9 @@
 # imports
 
 import os
-
-# Datetime
 from datetime import datetime, timezone
 
 from dotenv import load_dotenv
-
-# Flask
 from flask import (
     Flask,
     abort,
@@ -18,11 +14,7 @@ from flask import (
     request,
     url_for,
 )
-
-# hash
 from flask_bcrypt import Bcrypt
-
-# Flask Login
 from flask_login import (
     LoginManager,
     UserMixin,
@@ -31,13 +23,9 @@ from flask_login import (
     login_user,
     logout_user,
 )
-
-# SQL alchemy
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import SQLAlchemyError
-
-# FlaskForms
 from flask_wtf import FlaskForm
+from sqlalchemy.exc import SQLAlchemyError
 from wtforms import (
     PasswordField,
     SelectField,
