@@ -60,6 +60,7 @@ login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):  # look for user based on user_id
+    '''load the user from the database'''
     return User.query.get(user_id)
 
 
@@ -158,8 +159,8 @@ class User(UserMixin, db.Model):
     teacher_code = db.Column(db.String, nullable=False, unique=True)
     admin = db.Column(db.Integer, nullable=False, default=0)
 
-    # use database user_id as login id
     def get_id(self):
+        '''use database user_id as login id'''
         return str(self.user_id)
 
 

@@ -1,15 +1,15 @@
 <nav>
     <div class="nav-left">
-        <a href="{{url_for('report')}}" class="link"><img class="logo" src="/static/images/Logo.png" alt="Logo" ></a>
-        <a href="{{url_for('report')}}" class="h_link">Report Incident</a>
-        <a href="{{ url_for('about')}}" class="h_link">About This Website</a>
+        <a href="{{ url_for('report') }}" class="link"><img class="logo" src="/static/images/Logo.png" alt="Logo" ></a>
+        <a href="{{ url_for('report') }}" class="h_link">Report Incident</a>
+        <a href="{{ url_for('about') }}" class="h_link">About This Website</a>
     </div>
     {% if current_user.is_authenticated %}
         <div class="nav-right">
-            <a href="{{ url_for('view')}}" class="h_link">All Reports</a>
+            <a href="{{ url_for('view') }}" class="h_link">All Reports</a>
 
             {% if current_user.admin == 1 %}
-            <a href="{{ url_for('signup')}}" class="h_link">Sign up</a>
+            <a href="{{ url_for('signup') }}" class="h_link">Sign up</a>
             {% endif %}
         </div>
 
