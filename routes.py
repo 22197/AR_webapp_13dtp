@@ -55,7 +55,7 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager()  # login manager to handle login sessions
 login_manager.init_app(app)
 login_manager.login_view = "login"
-# take user to login page for @Loginrequired if not logged in.
+# take user to login page for @login_required if not logged in.
 
 
 @login_manager.user_loader
@@ -200,7 +200,7 @@ class ReportForm(FlaskForm):
             Length(min=20, message="A more detailed explanation is required"),
             Length(
                 max=4000,
-                message="Please write a more consise explanation"),
+                message="Please write a more concise explanation"),
         ],
     )
     # Check Boxes
@@ -335,7 +335,7 @@ def report():
     form = ReportForm()
 
     # Check boxes
-    # query all type from type tabel and make list of tuples
+    # query all type from type table and make list of tuples
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
 
     # validate form
@@ -347,11 +347,14 @@ def report():
         report_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
         # make report_time show only date, hour and minutes
 
-        # set status id to 4 so initially "NOT checked"
-        status_id = 4
+        # define notchecked status and priority
+        STATUS_NOT_CHECKED = 4
+        PRIORITY_NOT_SET = 6
 
+        # set status id to 4 so initially "NOT checked"
+        status_id = STATUS_NOT_CHECKED
         # set priority id to 6 so initially "Not set"
-        priority_id = 6
+        priority_id = PRIORITY_NOT_SET
 
         new_report = Reports(
             report_title=title,
@@ -373,7 +376,7 @@ def report():
             db.session.add(new_report)  # add to db session
             db.session.commit()  # commit to db
 
-            form.title.data = ""  # reset for the next time]
+            form.title.data = ""  # reset for the next time
             form.report.data = ""
             form.type.data = []
 
@@ -442,7 +445,7 @@ def edit(report_id):
 
     # query for the report (404 if the report doesn't exist)
     report_to_update = Reports.query.get_or_404(report_id)
-    # query everything from type, status and priority (id and name)
+    # query all type, status and priority (id and name)
     form.type.choices = [(str(rt.type_id), rt.type) for rt in Type.query.all()]
     form.status.choices = [
         (str(s.status_id), s.status) for s in Status.query.all()
