@@ -348,13 +348,13 @@ def report():
         # make report_time show only date, hour and minutes
 
         # define notchecked status and priority
-        STATUS_NOT_CHECKED = 4
-        PRIORITY_NOT_SET = 6
+        status_NOT_CHECKED = 4
+        priority_NOT_SET = 6
 
         # set status id to 4 so initially "NOT checked"
-        status_id = STATUS_NOT_CHECKED
+        status_id = status_NOT_CHECKED
         # set priority id to 6 so initially "Not set"
-        priority_id = PRIORITY_NOT_SET
+        priority_id = priority_NOT_SET
 
         new_report = Reports(
             report_title=title,
@@ -365,9 +365,9 @@ def report():
         )
 
         # selected types are added to new_report
-        types = form.type.data
-        for type_id_str in types:  # loop each type
-            type_obj = Type.query.get(int(type_id_str))
+        types = [int(t) for t in form.type.data]
+        for type_id in types:  # loop each type
+            type_obj = Type.query.get(type_id)
             # query for type with the type id
             if type_obj:
                 new_report.types.append(type_obj)  # add to new report
@@ -479,9 +479,9 @@ def edit(report_id):
 
         report_to_update.types = []
         for type_id in selected_type_ids:
-            type = Type.query.get(type_id)
-            if type:
-                report_to_update.types.append(type)
+            type_obj = Type.query.get(type_id)
+            if type_obj:
+                report_to_update.types.append(type_obj)
                 # add type to report_to_update
 
         # if a note was written, add to db session
