@@ -2,7 +2,7 @@
 # imports
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime
 
 from dotenv import load_dotenv
 from flask import (
@@ -344,7 +344,7 @@ def report():
         report = form.report.data
 
         # report time when form was submit
-        report_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
+        report_time = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M")
         # make report_time show only date, hour and minutes
 
         # define notchecked status and priority
